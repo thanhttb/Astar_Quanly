@@ -1,4 +1,10 @@
 <?php
+
+function add_enroll($xcrud){
+    $maxStudentId = Xcrud_db::get_instance();
+    $query = 'UPDATE enrolls SET student_id = (SELECT MAX(id) FROM students) ORDER BY id DESC LIMIT 1';
+    $maxStudentId->query($query);
+}
 function result_status($postdata, $xcrud){
     if($postdata->get('result') != NULL){
         $postdata->set('statusNumber', 4 );
