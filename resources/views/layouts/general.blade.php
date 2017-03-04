@@ -147,11 +147,6 @@
 		@yield('content')
 		@endif
 
-    <!-- Metis Menu Plugin JavaScript -->
-	    <script src="{{url('public/admin/bower_components/metisMenu/dist/metisMenu.min.js')}}"></script>
-
-	    <!-- Custom Theme JavaScript -->
-	    <script src="{{url('public/admin/dist/js/sb-admin-2.js')}}"></script>
 
 
 	</body>	
