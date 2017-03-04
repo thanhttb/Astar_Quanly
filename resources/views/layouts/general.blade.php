@@ -31,31 +31,24 @@
                             <a href="#"><i class="fa fa-fw"></i><b>GHI DANH</b><span class="fa arrow"></span></a>
                             
                             <ul class="nav nav-second-level">
-                                 <li>
-                                        <a href="#">Ghi danh</a>
-                                    </li>                                
+                              
                                 <li>
-                                    <a href="#"> Công việc cần xử lý <span class="fa arrow"></span> </a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="#">Học sinh học buổi đầu</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Học sinh chưa xếp lịch</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Học sinh kiểm tra hôm nay</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Học sinh chờ xếp lớp</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{{ url('/enroll') }}"> Ghi danh nhanh <span class="fa arrow"></span> </a>
                                 </li>
-                                <li><a href="#">Học phụ đạo</a></li>    
+                                <li><a href="#">Ghi danh bổ sung</a></li>    
                                 <li>
-                                    <a href="#">Danh sách ghi danh</a>
+                                    <a href="{{ url ('/ktdv') }}">1. Kiểm tra đầu vào</a>
                                 </li>
-                               
+                               <li>
+                                    <a href="#">2. Kết quả kiểm tra</a>
+                                </li>
+                                <li>
+                                    <a href="#">3. Thông báo buổi học</a>
+                                </li>
+                                <li>
+                                	<a href="#">Danh sách tổng hợp </a>
+                                </li>
+
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

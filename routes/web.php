@@ -24,3 +24,6 @@ Route::get('/general',function(){
 Route::get('/enroll',function(){
 	return view('enroll/addNew');
 });
+Route::get('/ktdv',function(){
+	return view('enroll/ktdv');
+});
