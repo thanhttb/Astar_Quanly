@@ -8,13 +8,10 @@
 		<meta name="description" content="Astar Quan Ly" />
 		<meta name="keywords" content="Astar" />
 		<meta name="author" content="ThanhTran" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/default.css')}}" />
 		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/component.css')}}" />
 		<script src="{{asset('public/js/modernizr.custom.js')}}"></script>
-		<?php 
-      		
-		?>
+		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
 			
 

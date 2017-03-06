@@ -42,7 +42,11 @@
 
                     )); 
                 $addnew->after_insert('add_enroll');
+                
+                $addnew->pass_var('t2.receiver', Auth::user()->name);
+                $addnew->pass_var('t2.created_at', date('Y-m-d H:i:s'));
                 echo $addnew->render("create");
+
                 
             ?>
         </div>
@@ -50,7 +54,6 @@
     </div>
     <!-- /.container-fluid -->
 </div>
-
 
 
 <!-- /#page-wrapper -->            

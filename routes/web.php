@@ -27,3 +27,9 @@ Route::get('/enroll',function(){
 Route::get('/ktdv',function(){
 	return view('enroll/ktdv');
 });
+Route::get('/test',function(){
+	return view('enroll/test');
+});
+Route::post('/editDateTime',['as' => 'editDateTime', 'uses' => 'EnrollController@saveDate']);
+Route::post('/editTestInform',['as' => 'editTestInform', 'uses' => 'EnrollController@saveTestInform']);
+Route::post('/editShowUp',['as' => 'editShowUp', 'uses' => 'EnrollController@saveShowUp']);
