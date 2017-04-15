@@ -8,14 +8,29 @@
 		<meta name="description" content="Astar Quan Ly" />
 		<meta name="keywords" content="Astar" />
 		<meta name="author" content="ThanhTran" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/default.css')}}" />
 		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/component.css')}}" />
 		<script src="{{asset('public/js/modernizr.custom.js')}}"></script>
-		<?php 
-      		
-		?>
+		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <!-- x-editable (bootstrap version) -->
+        <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+    	<link href="{{asset('public/datetimepicker/css/bootstrap-datetimepicker.css')}}" rel="stylesheet"></link> 
+        <script src="{{asset('public/datetimepicker/js/bootstrap-datetimepicker.js')}}"></script>
+
+        <link href="{{ asset('select2-4.0.3/dist/css/select2.min.css')}}" rel="stylesheet" type="text/css"></link> 
+        <link href="{{ asset('select2-4.0.3/select2-bootstrap-css-master/docs/select2-bootstrap.css')}}" rel="stylesheet" type="text/css"></link> 
+
+		<script src="{{ asset('select2-4.0.3/dist/js/select2.full.js') }}"></script> 
 			
 
  
@@ -31,31 +46,24 @@
                             <a href="#"><i class="fa fa-fw"></i><b>GHI DANH</b><span class="fa arrow"></span></a>
                             
                             <ul class="nav nav-second-level">
-                                 <li>
-                                        <a href="#">Ghi danh</a>
-                                    </li>                                
+                              
                                 <li>
-                                    <a href="#"> Công việc cần xử lý <span class="fa arrow"></span> </a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="#">Học sinh học buổi đầu</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Học sinh chưa xếp lịch</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Học sinh kiểm tra hôm nay</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Học sinh chờ xếp lớp</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{{ url('/enroll') }}"> Ghi danh nhanh <span class="fa arrow"></span> </a>
                                 </li>
-                                <li><a href="#">Học phụ đạo</a></li>    
+                                <li><a href="#">Ghi danh bổ sung</a></li>    
                                 <li>
-                                    <a href="#">Danh sách ghi danh</a>
+                                    <a href="{{ url ('/ktdv') }}">1. Kiểm tra đầu vào</a>
                                 </li>
-                               
+                               <li>
+                                    <a href="{{url ('/result') }}">2. Kết quả kiểm tra</a>
+                                </li>
+                                <li>
+                                    <a href="{{url ('/ngaydautiendihocmedatemdentruongemvuadivuakhoc')}}">3. Thông báo buổi học</a>
+                                </li>
+                                <li>
+                                	<a href="#">Danh sách tổng hợp </a>
+                                </li>
+
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -142,16 +150,11 @@
 			
 	</div>
 	<div class="container">
-				<h1>Chào mừng {{ Auth::user()->name }} </h1>
+				
 	</div>
 		@yield('content')
 		@endif
 
-    <!-- Metis Menu Plugin JavaScript -->
-	    <script src="{{url('public/admin/bower_components/metisMenu/dist/metisMenu.min.js')}}"></script>
-
-	    <!-- Custom Theme JavaScript -->
-	    <script src="{{url('public/admin/dist/js/sb-admin-2.js')}}"></script>
 
 
 	</body>	
