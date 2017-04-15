@@ -1,5 +1,6 @@
 .xcrud{
     margin-bottom: 20px;
+    background: white;
 }
 .xcrud-list{
     min-width: 100%;
@@ -27,6 +28,8 @@
 .xcrud-list-container{
     overflow-x: auto;
     clear: both;
+		padding-left: 11px;
+    padding-right: 11px;
 }
 
 .xcrud-nav{

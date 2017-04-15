@@ -1,4 +1,3 @@
- 
 <?php
 // function add_modal($value, $fieldname, $primary_key, $row, $xcrud){
 // 	return '
@@ -26,7 +25,57 @@
 
 //   </div>
 // </div>';
-// }
+// }add_firstDay_showUp
+function class_detail($value, $fieldname, $primary_key, $row, $xcrud){
+   return '<a href="classDetail/'. $row['classes.id']. '">' . $value. '</a>';
+
+}
+function edit_class($value, $fieldname, $primary_key, $row, $xcrud){
+	return '<a href="#" class ="editClass" data-type="select2" data-value="'.$value.'" data-pk='.$primary_key.' data-title="Xếp lớp"></a>';
+
+}
+function add_firstDay_showUp($value, $fieldname, $primary_key, $row, $xcrud)
+{
+	$array=['Chưa đến học buổi đầu','Đã đến học buổi đầu']	;
+	return '<a href="#" class="showUp" data-type="select" data-pk="'.$primary_key.'" data-title="Select options">'.$array[$value].'</a>';
+
+}
+function add_inform($value, $fieldname, $primary_key, $row, $xcrud){
+	$array=['Chưa thông báo','Đã thông báo']	;
+  	return '<a href="#" class="testInform" data-type="select" data-pk="'.$primary_key.'" data-title="Select options">'.$array[$value].'</a>';
+
+}
+
+function add_edit_teacher($value, $fieldname, $primary_key, $row, $xcrud){
+	if($value != '0'){
+		return '<a href="#">'.$value.'</a>';
+	}
+	else{
+		return '<a href="#" class ="teacher" data-type="select2" data-value="'.$value.'" data-pk='.$primary_key.' data-title="Gửi bài"></a>';
+
+	}
+}
+function add_edit_result($value, $fieldname, $primary_key, $row, $xcrud){
+	return '<a href="#" class ="result" data-type="textarea" data-pk='.$primary_key.' data-title="Kết quả + Nhận xét">'.$value.'</a>';
+
+}
+function add_edit_informed($value, $fieldname, $primary_key, $row, $xcrud){
+	$array=['Chưa thông báo','Đã thông báo']	;
+
+	return '<a href="#" class ="resultInform" data-type="select" data-pk='.$primary_key.' data-title="Thông báo phụ huynh">'.$array[$value].'</a>';
+
+}
+function add_edit_decision($value, $fieldname, $primary_key, $row, $xcrud){
+	return '<a href="#" class ="decision" data-type="select" data-pk='.$primary_key.' data-title="Phản hồi của phụ huynh">'.$value.'</a>';
+}
+function add_class($value, $fieldname, $primary_key, $row, $xcrud){
+	return '<a href="#" class ="officalClass" data-type="select2" data-value="'.$value.'" data-pk='.$primary_key.' data-title="Xếp lớp"></a>';
+
+}
+function add_firstDay($value, $fieldname, $primary_key, $row, $xcrud){
+	$old_date = isset($value) ? date("d-m-Y h:i", strtotime($value)) : NULL;	
+   	return '<a href="#" class ="firstDay" data-type="datetime" data-pk="'.$primary_key.'" data-title="Nhập Buổi học đầu tiên">'. $old_date.'</a>'  ;
+}
 function add_testInform($value, $fieldname, $primary_key, $row, $xcrud)
 {
   $array=['Chưa thông báo','Đã thông báo']	;
@@ -38,15 +87,17 @@ function add_showUp($value, $fieldname, $primary_key, $row, $xcrud)
 	return '<a href="#" class="showUp" data-type="select" data-pk="'.$primary_key.'" data-title="Select options">'.$array[$value].'</a>';
 
 }
-function add_user_icon($value, $fieldname, $primary_key, $row, $xcrud)
+function add_appointment($value, $fieldname, $primary_key, $row, $xcrud)
 {
    $old_date = isset($value) ? date("d-m-Y h:i", strtotime($value)) : NULL;	
-   return '<a href="#" class ="appointment" id = "appointment'.$primary_key.'" data-pk="'.$primary_key.'" data-title="Nhập Ngày Hẹn">'. $old_date.'</a>'  ;
+   return '<a href="#" class ="appointment" id = "appointment'.$primary_key.'" data-type="datetime" data-pk="'.$primary_key.'" data-title="Nhập Ngày Hẹn">'. $old_date.'</a>'  ;
 }
 function add_enroll($xcrud){
     $maxStudentId = Xcrud_db::get_instance();
     $query = 'UPDATE enrolls SET student_id = (SELECT MAX(id) FROM students) ORDER BY id DESC LIMIT 1';
     $maxStudentId->query($query);
+
+    //app('App\Http\Controllers\StudentController')->addAccount(1,$xcrud->get('primary'));
 }
 function add_user_created_at($xcrud){
 	$add_name_time = Xcrud_db::get_instance();
