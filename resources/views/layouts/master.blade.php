@@ -472,14 +472,14 @@
                         <li class="heading">
                             <h3 class="uppercase">Features</h3>
                         </li>
-                        <li class="nav-item start active open">
+                        <li class="nav-item start">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-diamond"></i>
                                 <span class="title">GHI DANH</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item active open ">
+                                <li class="nav-item open ">
                                     <a href="{{ url('/enroll') }}"> Ghi danh nhanh</a>
                                 </li>
                                 <li class="nav-item  ">
@@ -497,7 +497,7 @@
                                 </li>
                                 
                             </ul>
-                        <li class="nav-item active open ">
+                        <li class="nav-item">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="glyphicon glyphicon-blackboard"></i>
                                 <span class="title">QUẢN LÝ LỚP HỌC</span>
@@ -524,8 +524,10 @@
                             <ul class="sub-menu">
                                 <li class="nav-item  ">
                                     <a href="{{ url('/listStudent') }}">Danh sách học sinh</a>
-                                </li>                               
-                                
+                                </li> 
+                                <li class="nav-item">                              
+                                    <a href="">Thêm học sinh</a>
+                                </li>
                             </ul>
                             
                         </li>
@@ -558,7 +560,7 @@
                             </a>
                             <ul class="sub-menu">
                                 <li class="nav-item  ">
-                                    <a href="{{ url('/createInvoice') }}">Lập phiếu thu</a>
+                                    <a href="{{ url('/selectAccount') }}">Đóng học phí</a>
                                 </li>
                                 <li class="nav-item  ">
                                     <a href="{{ url('/filterAcc') }}">Giao dịch</a>
