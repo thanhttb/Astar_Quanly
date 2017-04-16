@@ -33,7 +33,7 @@ var Transaction = function () {
                 return {
                     results: $.map(data, function (item) {
                         return {
-                            text: item.name +" "+ item.dob,
+                            text: item.name +" "+ item.dob + " "+ item.phone,
                             id: item.id
                         }
                     })

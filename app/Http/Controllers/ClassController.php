@@ -12,6 +12,7 @@ use App\Students;
 use App\Classes;
 use App\Parents;
 
+
 use Auth;
 class ClassController extends Controller
 {
@@ -95,13 +96,14 @@ class ClassController extends Controller
     }
     //Tạo ngày học, Chuyển khoản PH>>HS
     function postLesson(Request $request, $id){
-        $month = 0 ;// cho phan Tag       
-        $lessonCount = 0;
-        $class = Classes::find($id);
-        $tag = '#'.$class->name.' ';
-        echo $tag;
-        $dueDate = '';  
+         
     	foreach ($request->group as $key => $value) {
+            $month = 0 ;// cho phan Tag       
+            $lessonCount = 0;
+            $class = Classes::find($id);
+            $tag = '#'.$class->name.' ';
+            echo $tag;
+            $dueDate = '';
     		# code...
             // Số lần thêm ngày học +7 ngày
     		for($i=0 ; $i < $value['number']; $i++){
@@ -113,7 +115,7 @@ class ClassController extends Controller
 	    		$lesson->start_time = date('Y-m-d h:i:s',strtotime($ngayhoc."+".$i." week"));
 	    		$lesson->end_time = date('Y-m-d h:i:s', strtotime($lesson->start_time. "+". $value['thoiluong']. "minutes"));
 	    		$lesson->tuition = $value['tuition'];
-	    		$lesson->save();
+	    		//$lesson->save();
                 echo date('m',strtotime($ngayhoc."+".$i." week"))." ";
                 if(date('m',strtotime($ngayhoc."+".$i." week")) != $month){
                     $month = date('m',strtotime($ngayhoc."+".$i." week"));
@@ -121,12 +123,8 @@ class ClassController extends Controller
                 }
                 $lessonCount++;
                 $dueDate = date('Y/m/d',strtotime(str_replace('-','',$value['dueDate'])));
-    		}            
-    	}
-        echo "<br>";
-        echo $tag;  echo "<br>";
-        echo $lessonCount;
-    	$studentInClass = Class_std::where('class_id',$id)->where('lastDay',null)->get();
+    		}  
+            $studentInClass = Class_std::where('class_id',$id)->where('lastDay',null)->get();
                 //Chuyen tien tu parent>>student = sobuoi * tuition *discount  
                 //print_r($studentInClass);  
                 foreach ($studentInClass as $k => $v) {
@@ -136,35 +134,12 @@ class ClassController extends Controller
                     $studAcc = $student->acc_id;
                     $preTuition = $lessonCount * $class->tuition;
                     $this->transfer($parAcc,$studAcc,$preTuition,$dueDate,$tag);
-
-
-                    // $std = Students::findorfail($v['student_id']);
-        //             //Thêm điểm danh
-                    // $atd = new Attendances();
-                    // $atd->lesson_id = $lesson->id;
-                    // $atd->class_std_id = $v['id'];
-                    // $atd->save();
-                    // $balance = 0;
-
-                    // $lastTransaction = Transactions::where('student_id',$std->id)
-                    //                                  ->orderBy('id', 'desc')->first();
-                    // if(is_object($lastTransaction)){
-                    //  $balance = $lastTransaction->balance;
-                    // }
-                    // $transaction = new Transactions();
-                    // $transaction->student_id = $v['student_id'];
-                    // $transaction->lesson_id = $lesson->id;
-                    // $transaction->parent_id = $std->parent_id;
-                    // $transaction->class_id = $id;
-                    // $dueDate = str_replace('-','',$value['dueDate']);
-                    // $transaction->day = date('Y-m-d',strtotime($dueDate));
-                    // $transaction->amount -= $value['tuition'] * (100-$v['discount'])/100;
-                    // $transaction->balance = $balance - $value['tuition'] * (100-$v['discount'])/100;
-        //             $transaction->note = "Học phí";
-        //             $transaction->type = '-1';
-                    // $transaction->user = Auth::user()->name;
-                    // $transaction->save();
-                } 
+                }           
+    	}
+        echo "<br>";
+        echo $tag;  echo "<br>";
+        echo $lessonCount;
+    	
         return redirect()->route('classDetail',$id);
     }
 }

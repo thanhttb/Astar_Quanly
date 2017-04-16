@@ -27,7 +27,7 @@ var FormInputMask = function () {
         $("#mask_decimal").inputmask('decimal', {
             rightAlignNumerics: false
         }); //disables the right alignment of the decimal input
-        $("#mask_currency").inputmask('€ 999.999.999,99', {
+        $(".mask_currency").inputmask('999 999 999', {
             numericInput: true
         }); //123456  =>  € ___.__1.234,56
 
@@ -42,18 +42,12 @@ var FormInputMask = function () {
         }); //default
     }
 
-    var handleIPAddressInput = function () {
-        $('#input_ipv4').ipAddress();
-        $('#input_ipv6').ipAddress({
-            v: 6
-        });
-    }
+    
 
     return {
         //main function to initiate the module
         init: function () {
             handleInputMasks();
-            handleIPAddressInput();
         }
     };
 

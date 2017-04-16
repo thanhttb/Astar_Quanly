@@ -133,6 +133,7 @@ class StudentController extends Controller
 
     	return view('transactions.listByStudent', compact('stdTransaction','id','student','parent','classLearning','period'));
     }
+    
     function addAccount($studentId, $parentId){
         $student = Students::find($studentId);
         $parent = Parents::find($parentId);

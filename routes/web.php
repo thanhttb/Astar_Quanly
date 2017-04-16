@@ -142,14 +142,18 @@ Route::get('/listAll',function(){
 });
 Route::get('/searchAccount',['as'=>'searchAccount','uses'=>'AccountController@searchAccount']);
 Route::get('/filterAcc',function(){
-    $acc = Accounts::all();
-    return view('filterAcc',compact('acc'));
+    
+    return view('filterAcc');
 });
 Route::get('/getTransaction/{id}',['as'=>'getTransaction', 'uses'=>'TransController@getTransaction']);
-
 //DISCOUNT
 
 Route::get('/getDiscount',function(){
     return view('transactions.discount');
 });
-Route::get('/dongtien',['as'=>'dongtien','uses'=>'TransController@dongtien']);
+Route::get('/selectAccount',['as'=>'selectAccount','uses'=>'TransController@selectAccount']);
+Route::get('/dongtien/{id}',['as'=>'dongtien','uses'=>'TransController@dongtien']);
+Route::get('/detailTuition/{id}',['as'=>'detailTuition','uses'=>'TransController@detailTuition']);
+Route::get('/searchAccountParents',['as'=>'searchAccountParents','uses'=>'AccountController@searchAccountParents']);
+Route::get('/allTransaction/{id}',['as'=>'allTransaction','uses'=>'TransController@allTransaction']);
+Route::post('/recieve/{id}',['as'=>'recieve','uses'=>'TransController@recieve']);
