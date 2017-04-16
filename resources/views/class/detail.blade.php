@@ -244,7 +244,7 @@
                                 <div class="mt-repeater-input">
                                     <label class="control-label">Số lần thêm</label>
                                     <br/>
-                                    <input type="number" class="input-group form-control form-control-inline" name="number">
+                                    <input type="number" class="input-group form-control form-control-inline" name="number" max="5" min="1">
                                 </div>
                                 
                                 <div class="mt-repeater-input">
@@ -255,7 +255,7 @@
                         </div>
                             <a href="javascript:;" data-repeater-create class="btn btn-success mt-repeater-add" id="add">
                             <i class="fa fa-plus"></i> Add</a>
-                            <input class="btn btn-success" type="submit" value="Thêm Ngày Học">
+                            <input class="btn btn-success" type="submit" value="Thêm Ngày Học" >
 
                     </form>
                 </div>

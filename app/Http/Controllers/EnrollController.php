@@ -130,26 +130,34 @@ class EnrollController extends Controller
             $xl->class_id = $showUp->officalClass;
             $xl->firstDay = $showUp->firstDay;
             $xl->save();
-
+            $className = Classes::find($xl->class_id)->name;
             $balance = 0;
             //đếm số buổi học
             $lessons = Lessons::where('start_time','>=',$showUp->firstDay)->where('class_id',$showUp->officalClass)->get();
             if($lessons->count() != 0){
                 //get tuition of class
                 $tuition = Classes::find($showUp->officalClass)->tuition;
-                $preTuition = $tuition * $lessons->count();
+                $preTuition = array();
                 //Thêm tag eg: #hp4#hp5 cho description
-                $tag = '';
+                
                 $month = 0;
                 foreach ($lessons as $k => $value) {
                     # code...
                     if($month != date('m',strtotime($value->start_time))){
-                        $tag += '#hp'.$month.' ';
+                        $month = date('m',strtotime($value->start_time));
+                        $preTuition[$month] = 0;
                     }
+                    $preTuition[$month] += $tuition;
                 }
                 //Hạn đóng tiền
-                $date = day('Y-m-d',strtotime($showUp->firstDay." +14 days"));
-                transfer($parent->acc_id, $student->acc_id , $preTuition , $date, $tag);
+                $date = date('Y-m-d',strtotime($showUp->firstDay." +14 days"));
+                foreach ($preTuition as $key => $value) {
+                    # code...
+                    $tag = "#".$className."#hp".$key;
+                    $this->transfer($parent->acc_id, $student->acc_id , $value , $date, $tag);
+                }
+                
+    
             }
             // foreach ($lessons as $key => $value) {
                 # code...

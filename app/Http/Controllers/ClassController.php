@@ -115,7 +115,7 @@ class ClassController extends Controller
 	    		$lesson->start_time = date('Y-m-d h:i:s',strtotime($ngayhoc."+".$i." week"));
 	    		$lesson->end_time = date('Y-m-d h:i:s', strtotime($lesson->start_time. "+". $value['thoiluong']. "minutes"));
 	    		$lesson->tuition = $value['tuition'];
-	    		//$lesson->save();
+	    		$lesson->save();
                 echo date('m',strtotime($ngayhoc."+".$i." week"))." ";
                 if(date('m',strtotime($ngayhoc."+".$i." week")) != $month){
                     $month = date('m',strtotime($ngayhoc."+".$i." week"));
