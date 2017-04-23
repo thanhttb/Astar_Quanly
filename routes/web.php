@@ -141,8 +141,7 @@ Route::get('/listAll',function(){
     return view('listAll');
 });
 Route::get('/searchAccount',['as'=>'searchAccount','uses'=>'AccountController@searchAccount']);
-Route::get('/filterAcc',function(){
-    
+Route::get('/filterAcc',function(){    
     return view('filterAcc');
 });
 Route::get('/getTransaction/{id}',['as'=>'getTransaction', 'uses'=>'TransController@getTransaction']);
@@ -157,3 +156,22 @@ Route::get('/detailTuition/{id}',['as'=>'detailTuition','uses'=>'TransController
 Route::get('/searchAccountParents',['as'=>'searchAccountParents','uses'=>'AccountController@searchAccountParents']);
 Route::get('/allTransaction/{id}',['as'=>'allTransaction','uses'=>'TransController@allTransaction']);
 Route::post('/recieve/{id}',['as'=>'recieve','uses'=>'TransController@recieve']);
+Route::get('/uploadcsv',function(){
+    return view('uploadCsv.upload');
+
+});
+Route::post('/uploadStudent',['as'=>'uploadStudent','uses'=>'StudentController@upload']);
+
+Route::get('/getReceipt',['as'=>'receipt','uses'=>'RecieptController@get_form']);
+Route::post('/postReceipt',['as'=>'postReceipt','uses'=>'RecieptController@post_form']);
+Route::get('/listReceipt',['as'=>'listReceipt','uses'=>'RecieptController@list_receipt']);
+Route::get('/deleteLast',['as'=>'deleteLast','uses'=>'RecieptController@deleteLast']);
+
+Route::post('/postTbHocPhi/{id}',['as'=>'/postTbHocPhi','uses'=>'ClassController@tb_hoc_phi']);
+Route::post('/postThuHocPhi/{id}',['as'=>'/postThuHocPhi','uses'=>'TransController@thu_hoc_phi']);
+
+Route::get('/attendance',['as'=>'attendance','uses'=>'ClassController@attendance']);
+Route::get('/getStudent/{id}',['as'=>'getStudent','uses'=>'ClassController@get_student']);
+Route::get('/inPhieuThu/{request}/{newReceipt}',['as'=>'inPhieuThu','uses'=>'RecieptController@in_phieu_thu']);
+
+Route::get('/searchStudent/{classId}',['as'=>'searchStudent','uses'=>'ClassController@search_student']);

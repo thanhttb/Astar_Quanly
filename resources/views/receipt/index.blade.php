@@ -1,22 +1,16 @@
 <!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Phiếu thu</title>
-		
-	</head>
-	<?php  
-        function moneyval($value){
-        	$formated = str_replace('-', '', str_replace(' ', '', $value));
-        	$money = intval(str_replace('_', '', $formated));
-        	return $money;
-        }
-        function asVnd($value){
-        	return number_format(moneyval($value),'0','','.')."đ";
-        }
-        $total = 0;
-        function convert_number_to_words($number) {
- 
+<?php  
+    function moneyval($value){
+    	$formated = str_replace('-', '', str_replace(' ', '', $value));
+    	$money = intval(str_replace('_', '', $formated));
+    	return $money;
+    }
+    function asVnd($value){
+    	return number_format(moneyval($value),'0','','.')."đ";
+    }
+    $total = 0;
+    function convert_number_to_words($number) {
+
 		$hyphen      = ' ';
 		$conjunction = '  ';
 		$separator   = ' ';
@@ -125,17 +119,22 @@
 		}
 		 
 		return $string;
-		}
-     ?>
-
-	<body>
-		<link rel="stylesheet" href="{{asset('resources/views/receipt/style.css')}}">
-		<script src="{{asset('resources/views/receipt/script.js')}}"></script>
+	}
+ ?>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Phiếu thu</title>
+		<link rel="license" href="http://www.opensource.org/licenses/mit-license/">
+	</head>
+	<body style="font-size: 20px;">
+		<link rel="stylesheet" href="{{asset('resources/views/invoice/style.css')}}">
+		<script src="{{asset('resources/views/invoice/script.js')}}"></script>
 		<header>
 			<h1>PHIẾU THU</h1>
-			<span><img alt="" src="{{asset('resources/views/receipt/logoAstar.png')}}"></span>
+			<span><img alt="" src="{{asset('resources/views/invoice/logoAstar.png')}}"></span>
 			<address>
-				<p>Trung tâm bồi dưỡng văn hóa A-STAR</p>
+				<p >TRUNG TÂM BỒI DƯỠNG VĂN HÓA A-STAR</p>
 				<p>29 NGÕ 23 PHỐ ĐỖ QUANG,TRUNG HÒA, CẦU GIẤY, HÀ NỘI</p>
 				<p>091.635.5518 - 043.568.1888</p>
 			</address>
@@ -144,67 +143,57 @@
 		<article>
 			<h1>Recipient</h1>
 			<address contenteditable>
-				<p>Học sinh: <br>Tên học sinh</p>
+				<p>Học sinh: <br>{{$newReceipt->account}}</p>
 			</address>
 			<table class="meta">
 				<tr>
 					<th><span>Phiếu thu #</span></th>
-					<td><span contenteditable>{{$receipt->id}}</span></td>
+					<td><span contenteditable>{{$newReceipt->id}}</span></td>
 				</tr>
 				<tr>
 					<th><span>Ngày</span></th>
-					<td><span contenteditable id="date">{{date('d/m/Y')}}</span></td>
+					<td><span contenteditable id="date">{{date('d/m/y',strtotime($newReceipt->created_at))}}</span></td>
 				</tr>
 				<tr>
 					<th><span>Số tiền</span></th>
-					<td><span id="prefix" ></span><span>0</span></td>
+					<td><span id="prefix" ></span><span>{{asVnd($newReceipt->amount)}}</span></td>
 				</tr>
 			</table>
 			<table class="inventory">
 				<thead>
 					<tr>
 						<th><span contenteditable>Diễn giải</span></th>
-
-						<th><span contenteditable>Thành tiền</span></th>
+						<th><span contenteditable>Số tiền</span></th>
 						<th><span contenteditable>Ghi chú</span></th>
 					</tr>
 				</thead>
 				<tbody>
-					@for($i =0; $i < $request['count']; $i++)
-					    <?php $diengiai ='Lớp '.str_replace('hp', 'học phí tháng ', str_replace('#',' ',$request['tag'.$i]));
-					    	$total += is_null($request['total'])? moneyval($request['money'.$i]): moneyval($request['amount'.$i]);
-					     ?>
+					@foreach($request->khoanthu as $value)
 						<tr>
-							<td><span contenteditable>{{$diengiai}}</span></td>
-							<td>{{is_null($request['total'])? asVnd($request['money'.$i]): asVnd($request['amount'.$i])}}</td>
+							<td><span contenteditable>{{$value['note']}}</span></td>
+							<td><span contenteditable>{{asVnd(intval(trim(str_replace(' ', '', $value['amount']),'_')))}}</span></td>
 							<td><span contenteditable></span></td>
-
 						</tr>
-					@endfor
-					@if($request['otherFee'] != 0)
-						<tr>
-							<td> <span contenteditable>Phụ phí</span></td>
-							<td>{{asVnd($request['otherFee'])}}</td>
-						</tr>
-					@endif
+					@endforeach
+					
 				</tbody>
 			</table>
 			<table class="balance">
 				<tr>
-					<th><span contenteditable>Tổng tiền(bằng số)</span></th>
-					<td><span>{{asVnd($total)}}</span></td>
-				</tr>
-				<tr>
-					<th><span>Tổng tiền (bằng chữ)</span></th>
-					<td>
-						{{convert_number_to_words($total)}} đồng
-					</td>
+					<th><span contenteditable>Tổng tiền</span></th>
+					<td><span data-prefix></span><span>{{asVnd($newReceipt->amount)}}</span></td>
 				</tr>
 				
-				</tr>
 			</table>
+			<table >
+				<tr>
+					<th width="20%"><span >Bằng chữ</span></th>
+					<td><span data-prefix></span><span contenteditable>{{convert_number_to_words($newReceipt->amount)}} đồng</span></td>
+				</tr>
+				
+			</table>
+			
 		</article>
-
 		<div>
 			<table >
 				<thead>
@@ -215,7 +204,7 @@
 				<tbody>
 					<tr>
 						<td></td>
-						<td>{{Auth::user()->name}}</td>
+						<td>{{$newReceipt->receiver}}</td>
 						<td></td>
 					</tr>
 				</tbody>
@@ -225,10 +214,12 @@
 		<aside>
 			<h1><span contenteditable>GHI CHÚ</span></h1>
 			<div contenteditable>
-				<p>Thêm ghi chú, nếu không xóa đi
-				Chuyển Khoản || Thu trực tiếp ?
+				<p>
+					{{$newReceipt->type}}
 				</p>
 			</div>
 		</aside>
+
 	</body>
+
 </html>

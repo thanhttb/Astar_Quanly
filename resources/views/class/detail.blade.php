@@ -44,12 +44,9 @@
     </div>
     <div class="portlet-body">
         <ul class="nav nav-tabs">
-            
+
             <li>
-                <a href="#tab_1_1" class="active" data-toggle="tab"> Điểm danh </a>
-            </li>
-            <li>
-                <a href="#tab_1_2" data-toggle="tab"> Danh sách HS </a>
+                <a href="#tab_1_1" data-toggle="tab"> Danh sách HS </a>
             </li>
             <li class="dropdown">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Hoạt động
@@ -63,7 +60,7 @@
                         <a href="#tab_1_4" tabindex="-1" data-toggle="tab"> Danh sách ngày học </a>
                     </li>
                     <li>
-                        <a href="#tab_1_5" tabindex="-1" data-toggle="tab">Xếp lịch học bù</a>
+                        <a href="#tab_1_5" tabindex="-1" data-toggle="tab">Định tính tiền học</a>
                     </li>
                     <li>
                     </li>
@@ -71,77 +68,8 @@
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane fade active in" id="tab_1_1">
-                <div class="portlet light bordered">
-                    <div class="portlet-title">
-                        <div class="caption font-dark">
-                            <i class="icon-settings font-dark"></i>
-                            <span class="caption-subject bold uppercase">Điểm danh</span>
-                        </div>
-                        <div class="tools"> </div>
-                    </div>
-                    <div class="portlet-body">
-                        <table class="table table-striped table-bordered table-hover dt-responsive" id="table" width="70%">
-                            <thead>
-                                <tr>
-                                    <th width="25%">Họ tên học sinh</th>
-                                    <th width="5%"> Ngày sinh </th>
-                                    <th width="5%"> Số đt Phụ huynh</th>
-                                    @foreach($lessons as $key => $value)
-                                        <th width="3%">{{date('d/m',strtotime($value['start_time']))}}</th>
-                                    @endforeach
-                                    <th width="40px">x</th>
-                                    <th width="40px">kp</th>
-                                    <th width="40px">p</th>
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>Họ tên học sinh</th>
-                                    <th> Ngày sinh </th>
-                                    <th> Số đt Phụ huynh</th>
-                                    @foreach($lessons as $key => $value)
-                                        <th width="3%">{{date('d/m',strtotime($value['start_time']))}}</th>
-                                    @endforeach
-                                    <th>x</th>
-                                    <th>kp</th>
-                                    <th>p</th>
-                                    
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                @foreach($students as $std)
-                                    <tr>
-                                        <td>{{$std['lastName']}} {{$std['firstName']}}</td>
-                                        <td>{{date('d/m/Y',strtotime($std['dob']))}}</td>
-                                        <td>{{$std['phone']}}</td>
-                                        @foreach($lessons as $l)
-                                            <td>
-                                            @foreach($atd[$l['id']] as $data)
-                                                @if($data['class_std_id'] == $std['class_std_id'])
-                                                    <a href="#" class="atd" data-type="select" data-pk="{{$data['id']}}" data-title="Select options">{{$data['status']}}</a> 
-                                                    <i class= "i"></i>
-                                                    <!-- @if($data['status']=='kp' || $data['status'] =='p')
-                                                        <span><i data-pk="{{$data['id']}}"  data-title="Ghi chú" class="note fa fa-bookmark" style="padding: 0px; border:0px; margin:0px"></i></span>
-                                                    @endif -->
-                                                @endif
-                                            @endforeach
-                                            </td>
-                                        @endforeach
-                                        <td>{{$total[$std['class_std_id']]['x']}}</td>
-                                        <td>{{$total[$std['class_std_id']]['kp']}}</td>
-                                        <td>{{$total[$std['class_std_id']]['p']}}</td>
 
-                                    </tr>
-                                @endforeach
-
-                                
-                                </tbody>
-                        </table>    
-                    </div>
-                </div>                              
-            </div>
-            <div class="tab-pane fade" id="tab_1_2">
+            <div class="tab-pane fade" id="tab_1_1">
             <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption font-dark">
@@ -272,6 +200,129 @@
                     </div>
                 </div>
         </div> 
+        <div class="tab-pane fade open" id="tab_1_5">
+            <div class="portlet light bordered">
+                <!-- <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject font-dark sbold uppercase">Horizontal Form</span>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided" data-toggle="buttons">
+                            <label class="btn btn-transparent dark btn-outline btn-circle btn-sm active">
+                                <input type="radio" name="options" class="toggle" id="option1">Actions</label>
+                            <label class="btn btn-transparent dark btn-outline btn-circle btn-sm">
+                                <input type="radio" name="options" class="toggle" id="option2">Settings</label>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="portlet-body form">
+                    <form class="form-horizontal" role="form" action={{url('postTbHocPhi/'.$class['id'])}} method="POST">
+                        <input type="hidden" name="_token" value="{{csrf_token()}}">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Nội dung</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-sticky-note-o"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="eg: #Lớp#hp03" name="tag"> 
+                                    </div>
+                                </div>  
+                                <div class="form-group col-md-3">
+                                    <label>Tiền học</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-money"></i>
+                                        </span>
+                                        <input type="text" class="form-control tuition" placeholder="400.000" id="tuition" value={{$class['tuition']}}> 
+                                    </div>
+                                </div>  
+                                <div class="form-group col-md-2">
+                                    <label>Số buổi</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-hand-spock-o"></i>
+                                        </span>
+                                        <input type="text" class="form-control lesson" id="lesson" placeholder="3"> 
+                                    </div>
+                                </div>  
+                                <div class="form-group col-md-3">
+                                    <label>Tổng tiền</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-money"></i>
+                                        </span>
+                                        <input type="text" class="form-control total" placeholder="" id="total"> 
+                                    </div>
+                                </div>  
+                            </div>
+                            
+                        </div>
+                        <div class="porlet-body">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th width="20%"> Họ Tên </th>
+                                        <th width="10%"> Ngày sinh </th>
+                                        <th width="10%"> Học phí </th>
+                                        <th width="10%"> Số buổi </th>
+                                        <th class="numeric"> Miễn giảm </th>
+                                        <th class="numeric"> Tổng tiền </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($students as $student)
+                                        <tr>
+                                            <td>{{$student['lastName'].' '.$student['firstName']}}</td>
+                                            <td>{{date('d/m/Y',strtotime($student['dob']))}}</td>
+                                            <td>
+                                                <div class="input-group input-small">
+                                                        <input type="text" class="form-control input-small each-tuition" 
+                                                        id= tuition{{$student['student_id']}} placeholder="400.000" value={{$class['tuition']}}>     
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-money"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-small">
+                                                        <input type="text" class="form-control input-small each-lesson" id= lesson{{$student['student_id']}} name=lesson{{$student['student_id']}}>
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-hand-spock-o"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td id= discount{{$student['student_id']}}>{{$student['discount']}}</td>
+                                            <td>
+                                                <div class="input-group input-small">
+                                                        <input type="text" class="form-control input-small each-total" id= total{{$student['student_id']}} name=total{{$student['student_id']}}>
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-money"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            
+                        </div>                                          
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button type="submit" class="btn green">Submit</button>
+                                    <button type="button" class="btn default">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
        
         <div class="clearfix margin-bottom-20"> </div>
         
@@ -287,8 +338,49 @@
 $.fn.editable.defaults.params = function (params){
                 params._token = $("#_token").data("token");
                 return params;
-            };    
+            };
+$('#tuition').change(function(){
+    var tuition = parseInt($('#tuition').val());
+    var lesson = parseInt($('#lesson').val());
+    $('.total').val(tuition * lesson);
+    $('.each-tuition').val(tuition);
+    <?php 
+        foreach ($students as $std) {        
+            echo "var discount = parseInt($('#discount".$std['student_id']."').html());";
+            echo "$('#total".$std['student_id']."').val((tuition*lesson*(100-discount))/100);";
+        }
+    ?>
 
+});   
+// $('#each-tuition').change(function(){
+//     var std
+// });
+$('#lesson').change(function(){
+    var tuition = parseInt($('#tuition').val());
+    var lesson = parseInt($('#lesson').val());
+    $('.total').val(tuition * lesson);
+    <?php 
+        foreach ($students as $std) {
+            # code...
+            echo "$('#lesson".$std['student_id']."').val($('#lesson').val());";
+            echo "var discount = parseInt($('#discount".$std['student_id']."').html());";
+            echo "$('#total".$std['student_id']."').val((tuition*lesson*(100-discount))/100);";
+        }
+
+    ?>
+     
+});
+$('.each-lesson, .each-tuition').change(function(){
+    <?php 
+        foreach ($students as $std) {
+            # code...
+            echo "var tuition = parseInt($('#tuition".$std['student_id']."').val());";
+            echo "var lesson = parseInt($('#lesson".$std['student_id']."').val());";
+            echo "var discount = parseInt($('#discount".$std['student_id']."').html());";
+            echo "$('#total".$std['student_id']."').val((tuition*lesson*(100-discount))/100);";
+        }
+     ?>
+});
 
 $(document).ready(function(){
     $('.atd').editable({     

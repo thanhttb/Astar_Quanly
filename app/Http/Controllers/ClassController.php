@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Teachers;
 use App\Transactions;
 use App\Class_std;
-use App\Attendances;
 use App\Lessons;
 use App\Students;
 use App\Classes;
 use App\Parents;
-
+use App\Discounts;
+use App\Transaction;
+use App\Accounts;
 
 use Auth;
 class ClassController extends Controller
@@ -33,8 +34,8 @@ class ClassController extends Controller
     }
     function classDetail($id){
         $class = Classes::find($id)->toArray();
-        //Hoc sinh diem danh
-    	$students = Class_std::select('class_std.id as class_std_id','students.firstName','students.lastName','students.dob','parents.name','parents.phone')
+        //Hoc sinh dang hoc
+    	$students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
                                 ->join('students','students.id','=','class_std.student_id')
                                 ->where('class_id', $id)->where('lastDay', null)
                                 ->join('parents','parents.id','=','students.parent_id')
@@ -45,44 +46,34 @@ class ClassController extends Controller
                                     ->join('students','students.id','=','class_std.student_id')
                                     ->join('parents','parents.id','=','students.parent_id')
                                     ->get()->toArray(); 
+        foreach ($students as $key => $value) {
+            $discount = Discounts::where('from',$value['student_acc'])->where('to',$class['acc_id'])->where('type','discount')->get()->toArray();
+            $students[$key]['discount'] = (empty($discount)) ? 0 : $discount[0]['discount'];
 
-        //Chu kỳ 2 tháng và 1 năm
-        $thisMonth = date('m');
-        $monthInPeriod = ($thisMonth %2 ==0)? $thisMonth +1 : $thisMonth-1;
-        $thisYear = date('Y');
-        //Lấy các ngày học của lớp và trong chu kỳ 2 tháng
-        $lessons = Lessons::where('class_id',$id)->whereMonth('start_time','>=', min($thisMonth, $monthInPeriod))
-                            ->whereMonth('start_time','<=',max($thisMonth, $monthInPeriod))
-                            ->whereYear('start_time',$thisYear)->orderBy('start_time')->get()->toArray();	
-    	$atd = array(); //Mảng 2 chiều của bảng điểm danh [ngày học][học sinh]
-        $total = array();
+        }
+        $teachers = Teachers::all()->toArray();
 
+    	return view('class.detail',compact('class','students','studentsFull','id','teachers'));
+    }
+    function tb_hoc_phi($id, Request $request){
+        $class = Classes::find($id)->toArray();
+        //Hoc sinh dang hoc
+        $students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
+                                ->join('students','students.id','=','class_std.student_id')
+                                ->where('class_id', $id)->where('lastDay', null)
+                                ->join('parents','parents.id','=','students.parent_id')
+                                ->get()->toArray();
+        $output = $request->toArray();
         foreach ($students as $key => $value) {
             # code...
-            $total[$value['class_std_id']]['x'] = 0; 
-            $total[$value['class_std_id']]['p'] = 0;
-            $total[$value['class_std_id']]['kp'] = 0;
-        }
-    	foreach ($lessons as $key => $value) {
-    		# Danh sach diem danh
-    		$attendance = Attendances::where('lesson_id',$value['id'])->get()->toArray();
-            foreach ($attendance as $k => $v) {
-                # code...
-                if($v['status']=='x') $total[$v['class_std_id']]['x']++;
-                if($v['status']=='p') $total[$v['class_std_id']]['p']++;
-                if($v['status']=='kp') $total[$v['class_std_id']]['kp']++;
+            $total = $output['total'.$value['student_id']];
+            $tag = $output['tag'];
+            if(!is_nan($total) && $total != 0){
+                $this->transfer($value['parent_acc'], $value['student_acc'], $total, date('Y-m-d'), $tag);
             }
-
-            $atd[$value['id']] = $attendance;
-    	}
-    	// echo "<pre>";
-    	// print_r($atd);
-     //    echo "<pre>";
-     //    print_r($lessons);
-        // echo "<pre>";
-        // print_r($studentsFull);
-        $teachers = Teachers::all()->toArray();
-    	return view('class.detail',compact('atd','students','lessons','total','studentsFull','class','id','teachers'));
+        }
+        echo "<pre>";
+        print_r($request->toArray());
     }
     function save_atd(Request $request){
         $atd = Attendances::find($request->pk);
@@ -141,5 +132,21 @@ class ClassController extends Controller
         echo $lessonCount;
     	
         return redirect()->route('classDetail',$id);
+    }
+    function attendance(){
+        $classes = Classes::all();
+        $teachers = Teachers::all();
+        return view('class.diemdanh',compact('classes','teachers'));
+    }
+    function search_student($classId){
+        $class = Classes::find($classId)->toArray();
+        //Hoc sinh dang hoc
+        $students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
+                                ->join('students','students.id','=','class_std.student_id')
+                                ->where('class_id', $classId)->where('lastDay', null)
+                                ->join('parents','parents.id','=','students.parent_id')
+                                ->get()->toArray();
+        
+        return view('class.danhsachHS',compact('students'));
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+
 use App\Teachers;
 use App\Parents;
 use App\Transactions;
@@ -49,7 +51,8 @@ class StudentController extends Controller
     		$thisMonth = date('m',strtotime($atd[0]['start_time']));
 	        $monthInPeriod = ($thisMonth %2 ==0)? $thisMonth +1 : $thisMonth-1;
 	        $thisYear = date('Y');
-	       	$period = min($thisMonth, $monthInPeriod). " - " .max($thisMonth, $monthInPeriod);
+	       	$period = min($
+                thisMonth, $monthInPeriod). " - " .max($thisMonth, $monthInPeriod);
 		
 			$tuitionBeforeDiscount = 0;	
 			$lesson_count=0;    		
@@ -153,5 +156,17 @@ class StudentController extends Controller
         $student->acc_id = $studAccount->id;
         $parent->save();
         $student->save();
+    }
+    function upload(Request $request){
+        if(Input::hasFile('csv')){
+            $file = Input::file('csv');
+            $file->move(public_path().'/csv/', $file->getClientOriginalName());
+            $input = fopen(public_path().'/csv/'.$file->getClientOriginalName(), 'r');
+                while(($data = fgetcsv($input,1000,"*")) !== FALSE){
+                    echo "<pre>";
+                    print_r($data)  ;
+                }   
+        }
+
     }
 }

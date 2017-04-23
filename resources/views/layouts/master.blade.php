@@ -97,9 +97,9 @@
                 <div class="page-top">
                     <!-- BEGIN HEADER SEARCH BOX -->
                     <!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
-                    <!-- <form class="search-form" action="page_general_search_2.html" method="GET">
+                    <!-- <form class="search-form" action="{{url('/searchAccountParents')}}" method="GET">
                         <div class="input-group">
-                            <input type="text" class="form-control input-sm" placeholder="Search..." name="query">
+                            <input type="text" class="form-control input-sm" placeholder="Search..." name="term">
                             <span class="input-group-btn">
                                 <a href="javascript:;" class="btn submit">
                                     <i class="icon-magnifier"></i>
@@ -460,7 +460,7 @@
                     <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
                     <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
                     <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-                    <ul class="page-sidebar-menu   " data-keep-expanded="true" data-auto-scroll="true" data-slide-speed="200">
+                    <ul class="page-sidebar-menu" data-keep-expanded="true" data-auto-scroll="true" data-slide-speed="200">
                         <li class="nav-item ">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-home"></i>
@@ -472,7 +472,7 @@
                         <li class="heading">
                             <h3 class="uppercase">Features</h3>
                         </li>
-                        <li class="nav-item start">
+                        <li c lass="nav-item start">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-diamond"></i>
                                 <span class="title">GHI DANH</span>
@@ -515,7 +515,7 @@
                             </ul>
                             
                         </li>
-                        <li class="nav-item active open ">
+                        <li class="nav-item">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="  glyphicon glyphicon-education"></i>
                                 <span class="title">QUẢN LÝ HỌC SINH</span>
@@ -566,7 +566,7 @@
                                     <a href="{{ url('/filterAcc') }}">Giao dịch</a>
                                 </li>
                                 <li class="nav-item  ">
-                                    <a href="{{ url('/listAll') }}">Ds Tổng</a>
+                                    <a href="{{ url('/getReceipt') }}">Thêm phiếu thu (tạm thời)</a>
                                 </li>  
                                 <li class="nav-item  ">
                                     <a href="{{ url('/getDiscount') }}">Discount</a>

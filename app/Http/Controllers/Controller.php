@@ -28,38 +28,32 @@ class Controller extends BaseController
         $parentAccount = $parent->acc_id;
         $class_std = Class_std::where('student_id',$student[0]['id'])->get()->toArray();
         //Hoc phi
-
         foreach ($class_std as $key => $value) {
             // # code...
             $class = Classes::find($value['class_id']);            
-            echo $class->name;
             $eachMonth = 0;
-            for ($i=1; $i <=12 ; $i++) { 
-                $month = ($i < 10)?'0'.$i:$i ;
-
-                # code...
-                $negative = Transaction::where('from',$parentAccount)->where('description','LIKE','%#'.$class->name.'%')
-                            ->where('description','LIKE','%#hp'.$month.'%')
+            $negative = Transaction::where('from',$parentAccount)->where('description','LIKE','%#'.$class->name.'%')
+                            ->where('description','LIKE','%#hp%')->where('to',$stdAcc)
                             ->sum('amount');
-                $positive = Transaction::where('to', $parentAccount)->where('description','LIKE','%#'.$class->name.'%')
-                            ->where('description','LIKE','%#hp'.$month.'%')->sum('amount');
-                if($positive - $negative != 0){
-                    $tuition_detail[$class->name][$i] = $positive - $negative;
-                }
+            $positive = Transaction::where('to', $parentAccount)->where('description','LIKE','%#'.$class->name.'%')
+                        ->where('description','LIKE','%#hp%')->where('description','LIKE','%hs'.$stdAcc.'%')
+                        ->sum('amount');
+            if($positive - $negative != 0){
+                $tuition_detail['class'][$class->name] = $positive - $negative;
             }
 
         }
         //Phu phi
-        $otherPositive = Transaction::where('to',$parentAccount)->where('description','NOT LIKE', '%hp%')->sum('amount');
-        $otherNegative = Transaction::where('from' ,$parentAccount)->where('description','NOT LIKE', '%hp%')->sum('amount');
+        $otherPositive = Transaction::where('to',$parentAccount)->where('description','NOT LIKE', '%hp%')->where('to',$stdAcc)->sum('amount');
+        $otherNegative = Transaction::where('from' ,$parentAccount)->where('description','NOT LIKE', '%hp%')->where('description','LIKE','%hs'.$stdAcc.'%')->sum('amount');
         if($otherPositive - $otherNegative != 0){
             $tuition_detail['otherFee'] = $otherPositive - $otherNegative;
         }
         else $tuition_detail['otherFee'] = 0;
-        $totalPositive = Transaction::where('to',$parentAccount)->sum('amount');
-        $totalNegative = Transaction::where('from', $parentAccount)->sum('amount');
-        $tuition_detail['total'] = $totalPositive - $totalNegative;
         $tuition_detail['stdAcc'] = $stdAcc;
+        $tuition_detail['parentAcc'] = $parentAccount;
+        // echo "<pre>";
+        // print_r($tuition_detail);
         return $tuition_detail;
     }
     protected function transfer($fromAcc, $toAcc, $amount, $date, $description){
