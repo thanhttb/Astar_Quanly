@@ -56,6 +56,8 @@ class ClassController extends Controller
     	return view('class.detail',compact('class','students','studentsFull','id','teachers'));
     }
     function tb_hoc_phi($id, Request $request){
+        $this->validate($request, [
+            'tag'=>'required']);
         $class = Classes::find($id)->toArray();
         //Hoc sinh dang hoc
         $students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
@@ -67,7 +69,7 @@ class ClassController extends Controller
         foreach ($students as $key => $value) {
             # code...
             $total = $output['total'.$value['student_id']];
-            $tag = $output['tag'];
+            $tag = '#'.$class['name'].''.$output['tag'];
             if(!is_nan($total) && $total != 0){
                 $this->transfer($value['parent_acc'], $value['student_acc'], $total, date('Y-m-d'), $tag);
             }
@@ -138,6 +140,48 @@ class ClassController extends Controller
         $teachers = Teachers::all();
         return view('class.diemdanh',compact('classes','teachers'));
     }
+    function post_attendance(Request $request){
+        // echo "<pre>";
+        // print_r($request->toArray());
+        $this->validate($request,[
+            'status1' => 'required',
+            ]);
+        $classId = $request->class;
+        $class = Classes::find($classId)->toArray();
+        //Hoc sinh dang hoc
+        $students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
+                                ->join('students','students.id','=','class_std.student_id')
+                                ->where('class_id', $classId)->where('lastDay', null)
+                                ->join('parents','parents.id','=','students.parent_id')
+                                ->get()->toArray();
+        $request = $request->toArray();
+        foreach ($students as $key => $student) {
+            # code...
+            $studentAccount = $student['student_acc'];
+            $classAccount = $class['acc_id'];
+            $amount = $class['tuition'];
+            $description = '#status:'.$request['status'.$student['student_id']].
+                            '#note:'.$request['note'.$student['student_id']].
+                            '#mark:'.$request['result'.$student['student_id']].'#gv:'.$request['teacher'];
+            $date = date('Y-m-d', strtotime($request['lesson']));
+            $this->transfer($studentAccount, $classAccount, $amount,$date, $description );
+            }
+
+    }
+    function tag_to_content($str){
+        $explode = explode('#', $str);
+        
+        $content = array();
+        foreach ($explode as $key => $value) {
+            # code...
+            $temp = explode(':',$value);
+            if(!empty($temp[1]) || !empty($temp[0])){
+                $content[$temp[0]]=$temp[1];
+            }
+        }
+        return $content;
+
+    }
     function search_student($classId){
         $class = Classes::find($classId)->toArray();
         //Hoc sinh dang hoc
@@ -146,7 +190,54 @@ class ClassController extends Controller
                                 ->where('class_id', $classId)->where('lastDay', null)
                                 ->join('parents','parents.id','=','students.parent_id')
                                 ->get()->toArray();
-        
-        return view('class.danhsachHS',compact('students'));
+        $thisMonth = date('m');
+        $previousMonth = $thisMonth - 1;
+        $allTransaction = Transaction::where('to',$class['acc_id'])->whereMonth('date','<=',$thisMonth)->whereMonth('date','>=',$previousMonth)
+                                        ->orderBy('date')->get()->toArray();
+        $allLesson = [];
+        foreach ($allTransaction as $key => $value) {
+            if(!in_array($value['date'], $allLesson)){
+                array_push($allLesson, $value['date']);
+            }
+        }                                    
+        foreach ($students as $key => $student) {
+            # code...
+            $transaction = Transaction::where('from',$student['student_acc'])->where('to',$class['acc_id'])
+                                        ->whereMonth('date','<=',$thisMonth)->whereMonth('date','>=',$previousMonth)
+                                        ->orderBy('date')->get()->toArray();
+            
+
+            foreach ($transaction as $k => $v) {
+                # code...
+                $transaction[$k]['description'] = $this->tag_to_content($v['description']);
+            }
+            $students[$key]['attendance'] = $transaction;
+
+        }
+        $teachers = Teachers::all();
+        // echo "<pre>";
+        // print_r($students);
+         return view('class.danhsachHS',compact('students','teachers','allLesson'));
+    }
+
+    function edit_lesson($transactionId){
+        $t = Transaction::find($transactionId);        
+        $result = $t->toArray();
+        $result['description'] = $this->tag_to_content($t->description);
+
+        $student = Students::where('acc_id',$result['from'])->get()->toArray();
+        $student = $student[0];
+        $teacher = Teachers::find($result['description']['gv'])->toArray();
+        $teacher = $teacher;
+        $allTeacher = Teachers::all()->toArray();
+        $trogiang = Teachers::where('type','trợ giảng')->get()->toArray();
+        //         echo "<pre>";
+        // print_r($result);
+        return view('class.editModal',compact('result','student','teacher','trogiang','allTeacher'));
+    }
+    function save_lesson(Request $request, $transactionId){
+        echo "<pre>";
+        print_r($request->toArray());
+        return \Response::json($request);
     }
 }

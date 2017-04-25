@@ -171,7 +171,11 @@ Route::post('/postTbHocPhi/{id}',['as'=>'/postTbHocPhi','uses'=>'ClassController
 Route::post('/postThuHocPhi/{id}',['as'=>'/postThuHocPhi','uses'=>'TransController@thu_hoc_phi']);
 
 Route::get('/attendance',['as'=>'attendance','uses'=>'ClassController@attendance']);
+Route::post('/postAttendance',['as'=>'postAttendance','uses'=>'ClassController@post_attendance']);
+
 Route::get('/getStudent/{id}',['as'=>'getStudent','uses'=>'ClassController@get_student']);
 Route::get('/inPhieuThu/{request}/{newReceipt}',['as'=>'inPhieuThu','uses'=>'RecieptController@in_phieu_thu']);
 
 Route::get('/searchStudent/{classId}',['as'=>'searchStudent','uses'=>'ClassController@search_student']);
+Route::get('/getEditLesson/{transactionId}',['as'=>'getEditLesson','uses'=>'ClassController@edit_lesson']);
+Route::put('/postEditLesson/{transactionId}',['as'=>'postEditLesson','uses'=>'ClassController@save_lesson']);

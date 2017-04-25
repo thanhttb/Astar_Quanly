@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 	<div class="portlet light bordered">
         <div class="portlet-body form">
-            <form class="form-horizontal" role="form" action="#" method="POST">
+            <form class="form-horizontal" role="form" action="{{url('postAttendance')}}" method="POST">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-body">
                     <div class="row">
@@ -22,7 +22,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-sticky-note-o"></i>
                                 </span>
-                                <select id="class" class="form-control input-lg select2" >
+                                <select id="class" class="form-control input-lg select2" name="class" >
                                         @foreach($classes as $class)
                                         	<option value="{{$class->id}}">{{$class->name}}</option>
                                         @endforeach        
@@ -35,7 +35,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-money"></i>
                                 </span>
-                                <input type="text" class="form-control tuition date-picker" > 
+                                <input type="text" class="form-control tuition date-picker" name="lesson" value="{{date('d-m-Y')}}"> 
                             </div>
                         </div>  
                         <div class="form-group col-md-5">
@@ -44,7 +44,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-hand-spock-o"></i>
                                 </span>
-                                <select id="teacher" class="form-control input-lg select2" >
+                                <select id="teacher" class="form-control input-lg select2" name="teacher">
                                         @foreach($teachers as $teacher)
                                         	<option value="{{$teacher->id}}">{{$teacher->name. "|". $teacher->school}}</option>
                                         @endforeach        
@@ -57,7 +57,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-money"></i>
                                 </span>
-                                <input type="text" class="form-control total" placeholder="" id="total"> 
+                                <input type="text" class="form-control total" placeholder="" id="total" name="note"> 
                             </div>
                         </div>  
                     </div>
@@ -68,8 +68,8 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-paper-plane font-yellow-casablanca"></i>
-                                <span class="caption-subject bold font-yellow-casablanca uppercase"> Form Input </span>
-                                <span class="caption-helper">more samples...</span>
+                                <span class="caption-subject bold font-yellow-casablanca uppercase">Điểm danh </span>
+                                <span class="caption-helper"></span>
                             </div>
                             <div class="tools">
                                 <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
@@ -78,6 +78,7 @@
                             </div>
                         </div>
                         <div class="portlet-body">
+                        
                            </div>
                     </div>    
                     
@@ -103,7 +104,8 @@
         $('.date-picker').datepicker({
                 rtl: App.isRTL(),
                 orientation: "left",
-                autoclose: true
+                autoclose: true,
+                format: 'd-m-yyyy'
             });
        
     });
@@ -113,7 +115,9 @@
 
 	        var handlePortletAjax = function () {
 	                //custom portlet reload handler
-	                
+	                $('#diemdanh .portlet-title a.reload').click(function(e){
+	                   
+	                })
 	            }
 
 	            return {
@@ -125,12 +129,12 @@
 	            };
 
 	    }();
-    $('#class').on( 'select2:select', function (e) {
+	    $('#class').on( 'select2:select', function (e) {
 
-        $("#load-student").attr("data-url", "/astar/searchStudent/"+$('#class').val());
-        PortletAjax.init();
-    	$('#load-student')[0].click();
+	        $("#load-student").attr("data-url", "/astar/searchStudent/"+$('#class').val());
+	        PortletAjax.init();
+        	$('#load-student')[0].click();
 
-    });
+	    });
 </script>
 @endsection
