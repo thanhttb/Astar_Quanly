@@ -59,6 +59,10 @@ function add_edit_result($value, $fieldname, $primary_key, $row, $xcrud){
 	return '<a href="#" class ="result" data-type="textarea" data-pk='.$primary_key.' data-title="Kết quả + Nhận xét">'.$value.'</a>';
 
 }
+function add_note($value, $fieldname, $primary_key, $row, $xcrud){
+	return '<a href="#" class ="ghichu" data-type="textarea" data-pk='.$primary_key.' data-title="Ghi chú">'.$value.'</a>';
+
+}
 function add_edit_informed($value, $fieldname, $primary_key, $row, $xcrud){
 	$array=['Chưa thông báo','Đã thông báo']	;
 

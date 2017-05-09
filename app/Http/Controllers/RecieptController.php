@@ -17,7 +17,8 @@ class RecieptController extends Controller
             'student' => 'required',
             'khoanthu' => 'required',
             'method' => 'required',
-        ]);        
+        ]);  
+
         $maxId = Receipt::max('id');
         $lastRecieve = Receipt::find($maxId);
         $total = 0; $description = '';
@@ -33,14 +34,14 @@ class RecieptController extends Controller
         $newReceipt->type = $request->method;
         $newReceipt->receiver = (empty($request->user)) ? Auth::user()->name : $request->user;
         $newReceipt->created_at = (empty($request->date)) ? date('Y-m-d h:i:m') : date('Y-m-d h:i:m', strtotime($request->date));
-        $newReceipt->id = $maxId+1;
-        print_r($newReceipt);
-        echo "<pre>";
-        print_r($lastRecieve);
-        if($newReceipt->account != $lastRecieve->account && $newReceipt->description!=$lastRecieve->description){
+        $newReceipt->id = $maxId;
+        // echo "<pre>";
+        // print_r($lastRecieve);
+        if($newReceipt->account != $lastRecieve->account || $newReceipt->description!=$lastRecieve->description){
+            $newReceipt->id = $maxId+1;
             $newReceipt->save();
         }
-        //return View::make('receipt.index',compact('request','newReceipt'));
+        return View::make('receipt.index',compact('request','newReceipt'));
     }
     function in_phieu_thu($request, $newReceipt){
         return view('receipt.index',compact('request','newReceipt'));

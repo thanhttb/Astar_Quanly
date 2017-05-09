@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+<div class="container-fluid">
 	<div class="row">
 		<?php 
 			include(app_path().'/xcrud/xcrud.php');
@@ -17,6 +18,7 @@
 		 ?>
 		
 	</div>
+</div>
 <link href="http://select2.github.io/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://select2.github.io/dist/js/select2.full.js"></script>
 <script type="text/javascript">
@@ -31,6 +33,10 @@ window.onload = function(){
     }
     })};
 
+    jQuery(document).ready(function(){
+    	$('#thuchi-0').addClass('open active');
+    	$('#thuchi-5').addClass('open active');
+    });
 </script>
 
 @endsection

@@ -12,7 +12,7 @@ use App\Students;
 
 class AccountController extends Controller
 {
-    //
+    
     function searchAccount(Request $request){
     	$term = $request->term;
     	if(empty($term)){
@@ -39,5 +39,8 @@ class AccountController extends Controller
 
             return \Response::json($resultAccount);
         }
+    }
+    function list_account(){
+
     }
 }

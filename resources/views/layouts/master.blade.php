@@ -64,10 +64,18 @@
                             <i class="fa fa-angle-down"></i>
                         </button>
                         <ul class="dropdown-menu" role="menu">
+                            @if(Auth::user()->online == '0')
                             <li>
-                                <a href="javascript:;">
-                                    <i class="icon-docs"></i> Comming Soon </a>
+                                <a href="{{url('/checkin')}}">
+                                    <i class="fa fa-play"></i> Check-in </a>
                             </li>
+                            @else
+                            <li>
+                                <a href="{{url('/checkout')}}">
+                                    <i class="fa fa-stop"></i> Check-out </a>
+                            </li>
+                            @endif
+                                                       
                             <!-- <li>
                                 <a href="javascript:;">
                                     <i class="icon-tag"></i> New Comment </a>
@@ -472,32 +480,32 @@
                         <li class="heading">
                             <h3 class="uppercase">Features</h3>
                         </li>
-                        <li c lass="nav-item start">
+                        <li class="nav-item start" id="ghidanh-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-diamond"></i>
-                                <span class="title">GHI DANH</span>
+                                <span class="title">TIẾP NHẬN HỌC SINH</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item open ">
+                                <li class="nav-item" id="ghidanh-0-1">
                                     <a href="{{ url('/enroll') }}"> Ghi danh nhanh</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-2">
                                     <a href="{{ url ('/ktdv') }}">1. Kiểm tra đầu vào</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-3">
                                     <a href="{{url ('/result') }}">2. Kết quả kiểm tra</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-4">
                                     <a href="{{url ('/ngaydautiendihocmedatemdentruongemvuadivuakhoc')}}">3. Thông báo buổi học</a>
                                 </li>
                                 
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-5">
                                     <a href="{{url ('/listEnroll') }}">Danh sách tổng hợp </a>
                                 </li>
                                 
                             </ul>
-                        <li class="nav-item">
+                        <li class="nav-item" id="lophoc-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="glyphicon glyphicon-blackboard"></i>
                                 <span class="title">QUẢN LÝ LỚP HỌC</span>
@@ -505,17 +513,20 @@
                             </a>
                             <ul class="sub-menu">
                                 
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="lophoc-1">
                                     <a href="{{ url('/listClass') }}">Danh sách lớp học</a>
                                 </li>  
-                                <li class="nav-item  ">
-                                    <a href="#">Danh sách học bù</a>
+                                <li class="nav-item  " id="lophoc-2">
+                                    <a href="{{ url('/attendance') }}">Điểm danh</a>
+                                </li>
+                                <li class="nav-item  " id="lophoc-3">
+                                    <a href="{{ url('/hocbu')}}">Danh sách học bù</a>
                                 </li>                             
                                 
                             </ul>
                             
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="hocsinh-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="  glyphicon glyphicon-education"></i>
                                 <span class="title">QUẢN LÝ HỌC SINH</span>
@@ -523,7 +534,7 @@
                             </a>
                             <ul class="sub-menu">
                                 <li class="nav-item  ">
-                                    <a href="{{ url('/listStudent') }}">Danh sách học sinh</a>
+                                    <a href="{{ url('/listStudent') }}" id="hocsinh-1">Danh sách học sinh</a>
                                 </li> 
                                 <li class="nav-item">                              
                                     <a href="">Thêm học sinh</a>
@@ -531,44 +542,54 @@
                             </ul>
                             
                         </li>
-                        <li class="nav-item  ">
+                        <li class="nav-item  " id="nhanvien-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="  glyphicon glyphicon-user"></i>
                                 <span class="title">QUẢN LÝ NHÂN VIÊN</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="nhanvien-1">
                                     <a href="{{ url('/listTeacher') }}">Danh sách giáo viên</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="nhanvien-2">
                                     <a href="{{ url('/listTutor') }}">Danh sách trợ giảng</a>
                                 </li>  
                                 <li class="nav-item  ">
-                                    <a href="{{ url('/listUser') }}">Danh sách nhân viên</a>
+                                    <a href="{{ url('/listUser') }}" id="nhanvien-3">Danh sách nhân viên</a>
                                 </li>                             
-                                
+                                @if(Auth::user()->permission >=2)
+                                <li class="nav-item  " id="nhanvien-4"> 
+                                    <a href="{{url('/listShift')}}">
+                                        Chấm công Nhân viên</a>
+                                </li>
+                                @endif 
                             </ul>
                             
                         </li>
 
-                        <li class="nav-item  ">
+                        <li class="nav-item  " id="thuchi-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class=" glyphicon glyphicon-usd"></i>
-                                <span class="title">Bkper</span>
+                                <span class="title">Thu-Chi</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="thuchi-1">
                                     <a href="{{ url('/selectAccount') }}">Đóng học phí</a>
                                 </li>
-                                <li class="nav-item  ">
+                                @if(Auth::user()->permission >= 2)
+                                <li class="nav-item  " id="thuchi-2">
                                     <a href="{{ url('/filterAcc') }}">Giao dịch</a>
                                 </li>
-                                <li class="nav-item  ">
-                                    <a href="{{ url('/getReceipt') }}">Thêm phiếu thu (tạm thời)</a>
-                                </li>  
-                                <li class="nav-item  ">
+                                @endif
+                                <li class="nav-item  " id="thuchi-3">
+                                    <a href="{{ url('/getReceipt') }}">Thêm phiếu thu </a>
+                                </li>   
+                                <li class="nav-item  " id="thuchi-4">
+                                    <a href="{{ url('/getpayment') }}">Thêm phiếu chi</a>
+                                </li>
+                                <li class="nav-item  " id="thuchi-5">
                                     <a href="{{ url('/getDiscount') }}">Discount</a>
                                 </li>                             
                                 

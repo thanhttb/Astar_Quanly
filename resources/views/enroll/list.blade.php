@@ -25,4 +25,11 @@
     echo $list->render();
     
 ?>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#ghidanh-0').addClass('open active');
+        $('#ghidanh-0-5').addClass('open active');
+    })
+
+</script> 
 @endsection()

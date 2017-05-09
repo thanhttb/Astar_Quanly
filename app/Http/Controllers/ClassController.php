@@ -13,7 +13,7 @@ use App\Parents;
 use App\Discounts;
 use App\Transaction;
 use App\Accounts;
-
+use App\Employees;
 use Auth;
 class ClassController extends Controller
 {
@@ -69,7 +69,7 @@ class ClassController extends Controller
         foreach ($students as $key => $value) {
             # code...
             $total = $output['total'.$value['student_id']];
-            $tag = '#'.$class['name'].''.$output['tag'];
+            $tag = '#hs'.$value['student_acc'].'#'.$class['name'].''.$output['tag'];
             if(!is_nan($total) && $total != 0){
                 $this->transfer($value['parent_acc'], $value['student_acc'], $total, date('Y-m-d'), $tag);
             }
@@ -143,9 +143,9 @@ class ClassController extends Controller
     function post_attendance(Request $request){
         // echo "<pre>";
         // print_r($request->toArray());
-        $this->validate($request,[
-            'status1' => 'required',
-            ]);
+        // $this->validate($request,[
+        //     'status1' => 'required',
+        //     ]);
         $classId = $request->class;
         $class = Classes::find($classId)->toArray();
         //Hoc sinh dang hoc
@@ -160,9 +160,10 @@ class ClassController extends Controller
             $studentAccount = $student['student_acc'];
             $classAccount = $class['acc_id'];
             $amount = $class['tuition'];
-            $description = '#status:'.$request['status'.$student['student_id']].
-                            '#note:'.$request['note'.$student['student_id']].
-                            '#mark:'.$request['result'.$student['student_id']].'#gv:'.$request['teacher'];
+            $description = '#status$'.$request['status'.$student['student_id']].
+                            '#note$'.$request['note'.$student['student_id']].
+                            '#mark$'.$request['result'.$student['student_id']].'#gv$'.$request['teacher'];
+            $description = $description.'#hb_status$'.'#hb_date$'.'#hb_trogiang$'.'#hb_content$';
             $date = date('Y-m-d', strtotime($request['lesson']));
             $this->transfer($studentAccount, $classAccount, $amount,$date, $description );
             }
@@ -174,18 +175,20 @@ class ClassController extends Controller
         $content = array();
         foreach ($explode as $key => $value) {
             # code...
-            $temp = explode(':',$value);
+            $temp = explode('$',$value);
             if(!empty($temp[1]) || !empty($temp[0])){
                 $content[$temp[0]]=$temp[1];
             }
         }
+        // echo "<pre>"    ;
+        // print_r($content);
         return $content;
 
     }
     function search_student($classId){
         $class = Classes::find($classId)->toArray();
         //Hoc sinh dang hoc
-        $students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
+        $students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.email','parents.acc_id as parent_acc')
                                 ->join('students','students.id','=','class_std.student_id')
                                 ->where('class_id', $classId)->where('lastDay', null)
                                 ->join('parents','parents.id','=','students.parent_id')
@@ -230,14 +233,221 @@ class ClassController extends Controller
         $teacher = Teachers::find($result['description']['gv'])->toArray();
         $teacher = $teacher;
         $allTeacher = Teachers::all()->toArray();
-        $trogiang = Teachers::where('type','trợ giảng')->get()->toArray();
+        $allTrogiang = Teachers::where('type','trợ giảng')->get()->toArray();
+        $trogiang = Teachers::where('id',$result['description']['hb_trogiang'])->get()->toArray();
+        $trogiang = (empty($trogiang))? '':$trogiang[0]['name'];
         //         echo "<pre>";
         // print_r($result);
-        return view('class.editModal',compact('result','student','teacher','trogiang','allTeacher'));
+        return view('class.editModal',compact('result','student','teacher','allTrogiang','trogiang','allTeacher'));
     }
     function save_lesson(Request $request, $transactionId){
-        echo "<pre>";
-        print_r($request->toArray());
+        $request = $request->toArray();
+        $transaction = Transaction::find($transactionId);
+        $description = '#status$'.$request['optionsRadios'].
+                        '#note$'.$request['note'].
+                        '#mark$'.$request['mark'].'#gv$'.$request['gv'];
+        //Không phép và Có mặt (Không học bù)
+        if(empty($request['hb_status'])){
+            $description = $description.'#hb_status$'.'#hb_date$'.'#hb_trogiang$'.'#hb_content$';
+            $transaction->description = $description;
+            $transaction->save();
+        }
+        else{
+            $description = $description.'#hb_status$'.$request['hb_status'].'#hb_date$'.$request['hb_date'].
+                                        '#hb_trogiang$'.$request['hb_trogiang'].'#hb_content$'.$request['hb_content'];
+            $transaction->description = $description;
+            $transaction->save();
+        }
+        
         return \Response::json($request);
     }
+
+    function get_hocbu(){
+        $allHocBu = Transaction::where('description','LIKE','%#status$p%')->orderBy('date','ASC')->get()->toArray();
+        $result = array();
+        foreach ($allHocBu as $k => $v) {
+            //THONG TIN GIAO VIEN
+            $allTeachers = Teachers::all()->toArray();
+            //THONG TIN HOC SINH _ PHU HUYNH
+            $student = Students::where('acc_id', $v['from'])->get()->toArray();
+            $studentInfo = [$student[0]['firstName'], $student[0]['lastName'], $student[0]['dob']];
+            $parent = Parents::where('id',$student[0]['id'])->get()->toArray();
+            array_push($studentInfo, $parent[0]['phone']);
+            array_push($studentInfo, $v['from']);
+
+            //THONG TIN LOP HOC
+            $class = Classes::where('acc_id',$v['to'])->get()->toArray();
+            $classInfo = [$class[0]['name']];
+            array_push($classInfo, $v['to']);
+
+
+            $v['to'] = $classInfo;
+            $v['from'] = $studentInfo;
+            # code...
+            $description = $this->tag_to_content($v['description']);
+
+            $tg = Teachers::where('id',$description['hb_trogiang'])->get()->toArray();
+            $tgInfo = (empty($tg))?['']:[$tg[0]['name']];
+            array_push($tgInfo, $description['hb_trogiang']);
+            $description['hb_trogiang'] = $tgInfo;
+
+            // echo "<pre>";
+            // print_r($description);
+            // Chuẩn hóa ngày
+            $description['hb_date'] = str_replace('/', '-', str_replace(' - ',  ' ', $description['hb_date']));
+
+            if ($description['hb_status'] == 'Đã xếp lịch' &&
+            strpos($v['description'], 'Đã học bù') == FALSE &&
+            date('Y-m-d',strtotime($description['hb_date'])) >= date('Y-m-d',strtotime('tomorrow'))) {
+                // echo date('Y-m-d',strtotime($description['hb_date']))."<br>";
+                // echo date('Y-m-d',strtotime('tomorrow'));
+                # code...
+                $v['description'] = $description;
+                $v['label'] = 'daxeplich';
+                array_unshift($result, $v);
+                continue;
+            }
+            if($description['hb_status'] == 'Chưa xếp lịch' ||
+                $description['hb_status'] == ''){
+                $v['description'] = $description;
+                $v['label'] = 'chuaXepLich';
+                array_unshift($result, $v);
+                continue;
+            }
+            if($description['hb_status'] =='Đã xếp lịch' &&
+            strpos($v['description'], 'Đã học bù') == FALSE &&
+            date('Y-m-d',strtotime($description['hb_date'])) === date('Y-m-d')){
+                $v['description'] = $description;
+                $v['label'] = 'nhaclichhoc';
+                array_unshift($result, $v);
+                continue;
+            }
+            if($description['hb_status'] =='Đã xếp lịch' &&
+            strpos($v['description'], 'Đã học bù') == FALSE &&
+            date('Y-m-d',strtotime($description['hb_date'])) < date('Y-m-d')){
+                $v['description'] = $description;
+                $v['label'] = 'qualichhoc';
+                array_unshift($result, $v);
+                continue;
+            }
+            if(strpos($v['description'], 'Đã học bù') !== FALSE){
+                $v['description'] = $description;
+                $v['label'] = 'daHocBu';
+                array_push($result, $v);
+                continue;
+            }
+            if($description['hb_status'] == 'Từ chối'){
+                $v['description'] = $description;
+                $v['label'] = 'tuChoi';
+                array_push($result, $v);
+                continue;
+            }
+        }
+        // echo "<pre>";
+        // print_r($result);
+        return view('class.tableHocBu',compact('result','allTeachers'));
+    }
+    function edit_hocbu(Request $request){
+        echo "<pre>";
+                print_r($request->toArray());
+        $transaction = Transaction::find($request->pk);
+        $description = $this->tag_to_content($transaction->description);
+        $oldValue = '#'.$request->name.'$'.$description[$request->name];
+        if($request->name == "hb_date"){
+            $formatted_date = date('d-m-Y h:i',strtotime($request->value));
+            $newValue = '#hb_date$'.str_replace(' ', ' - ', $formatted_date);
+        }
+        else{
+            
+            $newValue = '#'.$request->name.'$'.$request->value;
+            
+        }        
+        $transaction->description = str_replace($oldValue, $newValue, $transaction->description);
+        $transaction->save();
+    }
+    function csv_to_class(){
+        $input = fopen("csv/class.csv", "r");
+        if($input !== FALSE){       
+            while(($data = fgetcsv($input,1000,"|")) !== FALSE){
+                $class = Classes::where('name','=',$data[0])->first();
+                $class->students = $data[6];
+                echo "<pre>";
+                print_r($class->toArray());
+                $class->save();
+
+            }
+        }    
+        else
+            echo "failed";
+    }
+    function temp(){
+        $teacher = Teachers::all();
+        foreach ($teacher as $key => $value) {
+            # code...
+            $t = Teachers::find($value->id);
+            $t->type = 'Giáo viên';
+            $t->save();
+        }
+    }
+    function csv_to_teacher(){
+        $input = fopen("csv/teacher.csv", "r");
+        if($input !== FALSE){
+            while(($data = fgetcsv($input, 10000, "|")) !== FALSE){
+                echo "<pre>";
+                print_r($data);
+                echo date('Y-m-d',strtotime($data[2]));
+                $teacher = new Teachers();
+                $teacher->name = $data[0]." ".$data[1];
+                $teacher->gender = 'Nữ';
+                $teacher->dob = date('Y-m-d',strtotime($data[2]));
+                $teacher->type = 'Trợ giảng';
+                $teacher->quequan = $data[3];
+                $teacher->hokhau = $data[4];
+                $teacher->sdt = $data[5];
+                $teacher->email = $data[6];
+                $teacher->diachi = $data[7];
+                $teacher->honnhan = $data[8];
+                $teacher->cmt_id = $data[10];
+                $teacher->cmt_ngaycap = $data[11];
+                $teacher->cmt_noicap = $data[12];
+                $teacher->dt_hocvi = $data[16];
+                $teacher->dt_loaitotnghiep = $data[17];
+                $teacher->nh_chutaikhoan = $data[18];
+                $teacher->nh_sothe = $data[19];
+                $teacher->nh_stk = $data[20];
+                $teacher->nh_ten = $data[21];
+                $teacher->nh_chinhanh = $data[22];
+                
+                $teacher->hs_giaykhaisinh = ($data[23] == 'có') ? 1:0;
+                $teacher->hs_cmt = ($data[24] == 'có') ? 1:0;
+                $teacher->hs_khamsuckhoe = ($data[25] == 'có') ? 1:0;
+                $teacher->hs_thpt = ($data[26] == 'có') ? 1:0;
+                $teacher->hs_daihoc = ($data[27] == 'có') ? 1:0;
+                $teacher->hs_bangdiem = ($data[28] == 'có') ? 1:0;
+                $teacher->hs_khac = $data[29];
+                $teacher->hs_hokhau = ($data[30] == 'có') ? 1:0;
+                $teacher->hs_hopdongld = ($data[31] == 'có') ? 1:0;
+                $teacher->hs_4anh = ($data[32] == 'có') ? 1:0;
+                $teacher->hs_soyeulylich = ($data[33] == 'có') ? 1:0;
+                $teacher->hs_donxinviec = ($data[34] == 'có') ? 1:0;
+                $teacher->hs_bantuthuat = ($data[35] == 'có') ? 1:0;
+                $teacher->hs_solaodong = ($data[36] == 'có') ? 1:0;
+                $teacher->hs_camket = ($data[37] == 'có') ? 1:0;
+
+                $account = new Accounts();
+                $account->name = $teacher->name;
+                $account->dob = $teacher->dob;
+                $account->type = 4;
+                $account->balance = 0;
+                $account->cat = 'outgoing';
+                $account->save();
+
+                $teacher->acc_id = $account->id;
+                $teacher->save();
+
+            }
+        }
+    }
 }
+
+

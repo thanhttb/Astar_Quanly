@@ -29,9 +29,13 @@
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
 
                 <div class="form-body">
+                    <!-- <div class="col-md-12 form-group">                        
+                            <label class="control-label">From</label>
+                            <input type="text" name="from" class="form-control" placeholder="From" id="from">
+                       </div> -->
                     <div class="col-md-12 form-group">                        
-                        <label class="control-label">Học sinh</label>
-                        <input type="text" name="student" class="form-control" placeholder="Nhập tên học sinh">
+                        <label class="control-label">To</label>
+                        <input type="text" name="student" class="form-control" placeholder="Nhập tên học sinh" id="to">
                    </div>
                     <div class="col-md-12 form-group mt-repeater">
                         <div data-repeater-list="khoanthu">
@@ -52,7 +56,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="javascript:;" data-repeater-create class="btn btn-info mt-repeater-add">
+                        <a href="javascript:;" data-repeater-create class="btn btn-info mt-repeater-add" id="add-khoan-thu">
                             <i class="fa fa-plus"></i>Thêm khoản thu</a>
                     </div>                    
                     <div class="form-group">
@@ -77,20 +81,20 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label">Người lập</label>
                         <div class="col-md-9">
-                            <input type="text" name="user" class="form-control input-inline input-medium" placeholder= {{Auth::user()->name}}>
+                            <input type="text" name="user" class="form-control input-inline input-medium" placeholder= "{{Auth::user()->name}}" disabled>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 control-label">Ngày lập</label>
                         <div class="col-md-9">
-                            <input type="text" name="date"  id="mask_date" class="form-control input-inline input-medium" placeholder = {{date('d/m/Y')}}>
+                            <input type="text" name="date"  id="mask_date" class="form-control input-inline input-medium" placeholder = "{{date('d/m/Y')}}" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="form-actions">
                     <div class="row">
                         <div class="col-md-offset-3 col-md-9">
-                            <button type="submit" class="btn green">Submit</button>
+                            <button type="submit" class="btn green" id="submit">Submit</button>
                             <button type="button" class="btn default">Cancel</button>
                         </div>
                     </div>
@@ -222,6 +226,32 @@
     }();
     jQuery(document).ready(function() {
             Phieuthu.init();
+            var count = 0;
+            $('#add-khoan-thu').click(function(){
+                count++;
+            });
+            $('.mt-repeater-delete').click(function(){
+                count--;
+            });
+            $('#submit').click(function(){
+                for (var i = 0; i <= count; i++) {
+
+                    var description = "[name = 'khoanthu["+i+"][note]']";
+                    var amount = "[name = 'khoanthu["+i+"][amount]']";
+                    var m = $(amount).val().replace(/_/g,'');
+                    m = m.replace(/ /g,'');
+                    console.log(m);
+                    var text = $('#from').val() +' '+ $('#to').val()+' '+$(description).val()+ ' '+ m;
+
+                    $.post("https://app.bkper.com/hooks/agtzfmJrcGVyLWhyZHITCxIGTGVkZ2VyGICAgObr8LgKDA/c68qvjj1muefesv9valjk71bfo",
+                        {
+                       "text":text,
+                       "user_name":"Thành"
+                    });
+                };
+            });
+            $('#thuchi-0').addClass('open active');
+            $('#thuchi-3').addClass('open active');
         });
 
 </script>

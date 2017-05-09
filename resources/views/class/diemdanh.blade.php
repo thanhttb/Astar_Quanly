@@ -1,4 +1,4 @@
-@extends('layouts.master')
+ @extends('layouts.master')
 @section('content')
 <?php 
 	include(app_path().'/xcrud/xcrud.php');
@@ -15,8 +15,8 @@
             <form class="form-horizontal" role="form" action="{{url('postAttendance')}}" method="POST">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-body">
-                    <div class="row">
-                        <div class="form-group col-md-2">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-3">
                             <label>Chọn Lớp</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -29,7 +29,7 @@
                                 </select>
                             </div>
                         </div>  
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>Chọn ngày học</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -38,7 +38,7 @@
                                 <input type="text" class="form-control tuition date-picker" name="lesson" value="{{date('d-m-Y')}}"> 
                             </div>
                         </div>  
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-3">
                             <label>Giáo viên</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -84,14 +84,7 @@
                     
                     
                 </div>                                          
-                <div class="form-actions">
-                    <div class="row">
-                        <div class="col-md-offset-3 col-md-9">
-                            <button type="submit" class="btn green">Submit</button>
-                            <button type="button" class="btn default">Cancel</button>
-                        </div>
-                    </div>
-                </div>
+                
             </form>
         </div>
     </div>
@@ -107,27 +100,25 @@
                 autoclose: true,
                 format: 'd-m-yyyy'
             });
-       
+          $("#lophoc-0").addClass('open active');
+         $("#lophoc-2").addClass('open active');
     });
     
 
 	var PortletAjax = function () {
-
 	        var handlePortletAjax = function () {
-	                //custom portlet reload handler
-	                $('#diemdanh .portlet-title a.reload').click(function(e){
-	                   
-	                })
-	            }
+                //custom portlet reload handler
+                $('#diemdanh .portlet-title a.reload').click(function(e){
+                   
+                })
+            }
+            return {
+                //main function to initiate the module
+                init: function () {
+                    handlePortletAjax();
+                }
 
-	            return {
-	                //main function to initiate the module
-	                init: function () {
-	                    handlePortletAjax();
-	                }
-
-	            };
-
+            };
 	    }();
 	    $('#class').on( 'select2:select', function (e) {
 
@@ -137,4 +128,7 @@
 
 	    });
 </script>
+
+
+
 @endsection

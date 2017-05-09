@@ -45,7 +45,7 @@
     <div class="portlet-body">
         <ul class="nav nav-tabs">
 
-            <li>
+            <li class="active">
                 <a href="#tab_1_1" data-toggle="tab"> Danh sách HS </a>
             </li>
             <li class="dropdown">
@@ -398,7 +398,8 @@ $(document).ready(function(){
         emptytext: "",
         type: 'textarea'
 
-    });  
+    }); 
+    $('#lophoc-1').addClass('open acitve'); 
      
 });
 

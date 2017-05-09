@@ -146,6 +146,14 @@
             </div>
         </div>
     </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        jQuery(document).ready(function(){
+        $('#thuchi-0').addClass('open active');
+        $('#thuchi-2').addClass('open active');
+    });
+    });
+</script>
 <link href="http://select2.github.io/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://select2.github.io/dist/js/select2.full.js"></script>
 <script type="text/javascript" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>

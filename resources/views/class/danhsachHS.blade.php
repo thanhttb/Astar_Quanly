@@ -2,10 +2,10 @@
 <link href="{{asset('assets/global/plugins/bootstrap-modal/css/bootstrap-modal.css')}}" rel="stylesheet" type="text/css" />
 <ul class="nav nav-tabs">
 
-<li class="">
-    <a href="#tab_1_1" data-toggle="tab">Điểm danh</a>
+<li class="active">
+    <a href="#tab_1_1" data-toggle="tab" aria-expanded="false">Điểm danh</a>
 </li>
-<li class="dropdown active">
+<li class="dropdown">
     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Hoạt động
         <i class="fa fa-angle-down"></i>
     </a>
@@ -27,7 +27,11 @@
             <div class="col-md-2">
                 <input type="text" class="form-control" placeholder=".col-md-3" disabled value="{{$student['lastName']}} {{$student['firstName']}}">  </div>
             <div class="col-md-1">
-                <input type="text" class="form-control" placeholder=".col-md-2" value="{{$student['dob']}}"> </div>
+                <input type="text" class="form-control" placeholder="" value="{{date('d-m-Y',strtotime($student['dob']))}}" disabled> </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" placeholder="" value="{{$student['phone']}}" disabled> </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" placeholder="" value="{{$student['email']}}" disabled> </div>
             <div class="col-md-2">
                 <div class="form-group">                    
                     <div class="mt-radio-inline">
@@ -46,13 +50,21 @@
                     </div>
                 </div>
               </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <input type="text" class="form-control" placeholder="Lý do nghỉ (Nếu có)" name="note{{$student['student_id']}}"> </div>
-            <div class="col-md-3">
+            <div class="col-md-1">
                 <input type="text" class="form-control" placeholder="Kết quả học tập(nếu có)" name="result{{$student['student_id']}}">
             </div>
         </div>
         @endforeach
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn green">Submit</button>
+                    <button type="button" class="btn default">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="tab-pane" id = "tab_1_3">
         <table class="table table-striped table-bordered table-hover" width="50%">

@@ -27,5 +27,14 @@
                 
             ?>
         </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".basic-single").select2();
+  $("#lophoc-0").addClass('open active');
+  $("#lophoc-1").addClass('open active');
+});
+</script>
+
                    
 @endsection()

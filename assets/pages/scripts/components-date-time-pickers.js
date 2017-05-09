@@ -6,7 +6,8 @@ var ComponentsDateTimePickers = function () {
             $('.date-picker').datepicker({
                 rtl: App.isRTL(),
                 orientation: "left",
-                autoclose: true
+                autoclose: true,
+                format: 'dd-mm-yyyy'
             });
             //$('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
         }
@@ -31,7 +32,8 @@ var ComponentsDateTimePickers = function () {
             $('.timepicker-no-seconds').timepicker({
                 autoclose: true,
                 minuteStep: 5,
-                defaultTime: false
+                defaultTime: false,
+                format: 'dd-mm-yyyy h:i'
             });
 
             $('.timepicker-24').timepicker({

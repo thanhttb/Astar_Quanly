@@ -33,10 +33,11 @@ Route::get('/enroll',function(){
 });
 Route::get('/ktdv',function(){
 	return view('enroll/ktdv');
-});
+})->name('ktdv');
 Route::get('/listEnroll',function(){
 	return view('enroll/list');
 });
+Route::post('/postEnroll',['as'=>'postEnroll','uses'=>'EnrollController@post_enroll']);
 Route::get('/result',['uses' => 'EnrollController@getResult']);
 Route::get('/ngaydautiendihocmedatemdentruongemvuadivuakhoc',['uses' => 'EnrollController@getFirstDay']);
 Route::post('/editDateTime',['as' => 'editDateTime', 'uses' => 'EnrollController@saveDate']);
@@ -44,7 +45,10 @@ Route::post('/editTestInform',['as' => 'editTestInform', 'uses' => 'EnrollContro
 Route::post('/editShowUp',['as' => 'editShowUp', 'uses' => 'EnrollController@saveShowUp']);
 Route::post('/saveTeacher',['as' => 'saveTeacher', 'uses' => 'EnrollController@saveTeacher']);
 Route::get('/getTeacher',['as' => 'getTeacher', 'uses' => 'TeacherController@getTeachers']);
+Route::get('/getAllTeacher',['as'=>'getAllTeacher', 'uses'=>'TeacherController@get_all']);
 Route::post('/saveResult',['as' => 'saveResult', 'uses' => 'EnrollController@saveResult']);
+Route::post('/saveNote',['as' => 'saveNote', 'uses' => 'EnrollController@saveNote']);
+
 Route::post('/editResultInform',['as' => 'editResultInform', 'uses' => 'EnrollController@editResultInform']);
 Route::post('/editDecision',['as' => 'editDecision', 'uses' => 'EnrollController@editDecision']);
 Route::post('/editClass',['as' => 'editClass', 'uses' => 'EnrollController@editClass']);
@@ -162,20 +166,71 @@ Route::get('/uploadcsv',function(){
 });
 Route::post('/uploadStudent',['as'=>'uploadStudent','uses'=>'StudentController@upload']);
 
+//Phiếu thu
 Route::get('/getReceipt',['as'=>'receipt','uses'=>'RecieptController@get_form']);
 Route::post('/postReceipt',['as'=>'postReceipt','uses'=>'RecieptController@post_form']);
 Route::get('/listReceipt',['as'=>'listReceipt','uses'=>'RecieptController@list_receipt']);
 Route::get('/deleteLast',['as'=>'deleteLast','uses'=>'RecieptController@deleteLast']);
 
+//Phiếu chi
+Route::get('/getpayment',['as'=>'payment','uses'=>'PaymentController@get_form']);
+Route::post('/postPayment',['as'=>'postPayment','uses'=>'PaymentController@post_form']);
+Route::get('/listpayment',['as'=>'listpayment','uses'=>'PaymentController@list_payment']);
+Route::get('/deleteLast',['as'=>'deleteLast','uses'=>'PaymentController@deleteLast']);
+
+//Thông báo học phí
 Route::post('/postTbHocPhi/{id}',['as'=>'/postTbHocPhi','uses'=>'ClassController@tb_hoc_phi']);
 Route::post('/postThuHocPhi/{id}',['as'=>'/postThuHocPhi','uses'=>'TransController@thu_hoc_phi']);
 
+//Điểm danh
 Route::get('/attendance',['as'=>'attendance','uses'=>'ClassController@attendance']);
 Route::post('/postAttendance',['as'=>'postAttendance','uses'=>'ClassController@post_attendance']);
 
 Route::get('/getStudent/{id}',['as'=>'getStudent','uses'=>'ClassController@get_student']);
-Route::get('/inPhieuThu/{request}/{newReceipt}',['as'=>'inPhieuThu','uses'=>'RecieptController@in_phieu_thu']);
+Route::get('/inPhieuThu/{request}/{newReceipt}',['as'=>'inPhieuThu','uses'=>'PaymentController@in_phieu_thu']);
 
 Route::get('/searchStudent/{classId}',['as'=>'searchStudent','uses'=>'ClassController@search_student']);
 Route::get('/getEditLesson/{transactionId}',['as'=>'getEditLesson','uses'=>'ClassController@edit_lesson']);
-Route::put('/postEditLesson/{transactionId}',['as'=>'postEditLesson','uses'=>'ClassController@save_lesson']);
+Route::post('/postEditLesson/{transactionId}',['as'=>'postEditLesson','uses'=>'ClassController@save_lesson']);
+Route::get('/listHocBu',['as'=>'listHocBu','uses'=>'ClassController@get_hocbu']);
+Route::get('/hocbu',function(){
+    return view('class.listHocBu');
+});
+//EDIT HOC BU
+    Route::post('/editHb',['as'=>'editHocBu','uses'=>'ClassController@edit_hocbu']);
+    
+//CSV
+Route::get('/csvToClass',['as'=>'csvToClass','uses'=>'ClassController@csv_to_class']);
+Route::get('/csvToTeacher',['as'=>'csvToTeacher','uses'=>'ClassController@csv_to_teacher']);
+Route::get('/csvToStudent',['as'=>'csvToStudent','uses'=>'StudentController@csv_to_student']);
+Route::get('/testBkper',function(){
+    return view('testBkper');
+});
+Route::post('/addTransaction',['as'=>'addTransaction','uses'=>'TransController@addTransaction']);
+
+//Chấm công
+Route::get('/checkin',['as'=>'checkin','uses'=>'ShiftController@get_checkin']);
+Route::post('/checkin',['as'=>'postCheckin','uses'=>'ShiftController@post_checkin']);
+Route::get('/checkout',['as'=>'checkout','uses'=>'ShiftController@get_checkout']);
+Route::post('/checkout',['as'=>'postCheckout','uses'=>'ShiftController@post_checkout']);
+
+Route::get('/listShift',function(){
+    return view('auth.listShift');
+});
+Route::get('/temp',['uses'=>'ClassController@temp']);
+
+
+Auth::routes();
+Route::resource('gcalendar', 'gCalendarController');
+Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth']);
+Route::get('cal.index',['as'=>'cal.index','uses'=>'gCalendarController@index']);
+
+Route::get('/ketoan',function(){
+    return view('/layouts.ketoan');
+});
+Route::get('/accountManagement',['as'=>'accountManagement','uses'=>'AccountController@list_account']);
+
+Route::get('/searchStudent',['as'=>'searchStudents','uses'=>'StudentController@fetch_students']);
+Route::get('/searchParent',['as'=>'searchParent','uses'=>'StudentController@fetch_parents']);
+
+Route::get('/dashboard',['as'=>'dashboard','uses'=>'EnrollController@getDashboard']);

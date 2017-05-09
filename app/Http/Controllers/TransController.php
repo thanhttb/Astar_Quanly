@@ -135,6 +135,8 @@ class TransController extends Controller
         // print_r($request->toArray());
 
         //Phiếu thu
+        $maxId = Receipt::max('id');
+        $lastRecieve = Receipt::find($maxId);
         $total = 0; $description = '';
         $newReceipt = new Receipt();
         $newReceipt->account = $request->student;
@@ -161,8 +163,19 @@ class TransController extends Controller
         $newReceipt->type = $request->method;
         $newReceipt->receiver = (empty($request->user)) ? Auth::user()->name : $request->user;
         $newReceipt->created_at = (empty($request->date)) ? date('Y-m-d h:i:m') : date('Y-m-d h:i:m', strtotime($request->date));
-        $newReceipt->save();
         $request->khoanthu = $khoanthu;
+        $newReceipt->id = $maxId;
+        // echo "<pre>";
+        // print_r($lastRecieve);
+        if($newReceipt->account != $lastRecieve->account || $newReceipt->description!=$lastRecieve->description){
+            $newReceipt->id = $maxId+1;
+            $newReceipt->save();
+        }
         return view('receipt.index',compact('request','newReceipt'));
+    }
+    function addTransaction(Request $request){
+        echo "<pre>";
+        print_r($request->toArray());
+
     }
 }

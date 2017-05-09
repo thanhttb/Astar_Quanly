@@ -20,10 +20,10 @@
         $ktdv->join('students.parent_id','parents','id');
 
         $ktdv->columns(array('student_id','parents.phone'
-        					,'subject','class','appointment','testInform','showUp','created_at','receiver'));
+        					,'subject','class','appointment','testInform','showUp','note','created_at','receiver'));
         $ktdv->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
                             'class'=> 'Lớp', 'appointment' => 'Ngày Kiểm tra', 'testInform' => 'Thông báo lịch KT', 'showUp'=>'Đến KT',
-                            'created_at'=>'Ngày tiếp nhận', 'receiver'=>'Người tiếp nhận'));   
+                            'note'=>'Ghi chú','created_at'=>'Ngày tiếp nhận', 'receiver'=>'Người tiếp nhận'));   
         
         //Highligt Học sinh kiểm tra hôm nay
         $tomorrow = new DateTime('tomorrow');
@@ -40,7 +40,9 @@
         $ktdv->unset_remove();
         $ktdv->column_callback('appointment','add_appointment');
         $ktdv->column_callback('testInform','add_testInform');
-        $ktdv->column_callback('showUp','add_showUp');    
+        $ktdv->column_callback('showUp','add_showUp');  
+        $ktdv->column_callback('note','add_note');
+
 	  ?>
     <div style="background: white;
  ">
@@ -103,12 +105,22 @@ function editInline(){
         }             
 
     });
+     $('.ghichu').editable({
+           		url: '{{route('saveNote')}}',
+           		row: 3,
+           		placement: 'left',
+           		success: function(response, newValue) {
+		            if(!response.success) return Xcrud.reload();
+		        }
+           });
 }
 $(document).ready(editInline());
 window.onload = function(){
     jQuery(document).on("xcrudafterrequest",function(event,container){
         editInline();        
     });
+    $('#ghidanh-0').addClass('open active');
+    $('#ghidanh-0-2').addClass('open active');
 }
     
 

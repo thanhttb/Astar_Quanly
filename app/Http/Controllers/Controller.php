@@ -44,7 +44,7 @@ class Controller extends BaseController
 
         }
         //Phu phi
-        $otherPositive = Transaction::where('to',$parentAccount)->where('description','NOT LIKE', '%hp%')->where('to',$stdAcc)->sum('amount');
+        $otherPositive = Transaction::where('to',$parentAccount)->where('description','NOT LIKE', '%hp%')->sum('amount');
         $otherNegative = Transaction::where('from' ,$parentAccount)->where('description','NOT LIKE', '%hp%')->where('description','LIKE','%hs'.$stdAcc.'%')->sum('amount');
         if($otherPositive - $otherNegative != 0){
             $tuition_detail['otherFee'] = $otherPositive - $otherNegative;
@@ -86,5 +86,41 @@ class Controller extends BaseController
     	$to->balance += $amount;
     	$from->save();
     	$to->save();
+    	return $transaction;
     }
+    protected function newStudent($parent_id, $acc_id, $fName, $lName, $dob, $gender, $school, $class, $email, $phone){
+    	$student = new Students();
+    	$student->parent_id = $parent_id;
+    	$student->acc_id = $acc_id;
+    	$student->lastName = $lName;
+    	$student->firstname = $fName;
+    	$student->dob = date('Y-m-d', strtotime($dob));
+    	$student->gender = $gender;
+    	$student->school = $school;
+    	$student->email = $email;
+    	$student->phone = $phone;
+    	$student->save();
+    	return $student;
+    }
+    protected function newAccount($name, $dob, $type, $balance){
+        $newAcc = new Accounts();
+        $newAcc->name = $name;
+        $newAcc->dob = $dob;
+        $newAcc->type = $type;
+        $newAcc->balance = $balance;
+        $newAcc->save();
+        return $newAcc;
+    }
+    protected function newParent($acc_id, $name, $phone, $email, $work, $add){
+    	$newParent = new Parents();
+    	$newParent->acc_id = $acc_id;
+    	$newParent->name = $name;
+    	$newParent->phone = $phone; 
+    	$newParent->email = $email;
+    	$newParent->work = $work;
+    	$newParent->address= $add;
+    	$newParent->save();
+    	return $newParent;
+    }
+    //
 }

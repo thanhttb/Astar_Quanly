@@ -11037,6 +11037,7 @@ class Xcrud
     }
     protected function save_file($file, &$filename, $field)
     {
+        echo $this->get_image_folder($field);
         $file_path = $this->get_image_folder($field) . '/' . $filename;
         move_uploaded_file($file['tmp_name'], $file_path);
         if ($this->after_upload)

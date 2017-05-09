@@ -51,9 +51,10 @@
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <!-- END THEME GLOBAL SCRIPTS -->
 <script type="text/javascript">
+
     $('#acc-search').select2({              
           ajax: {
-            url: '/astar/searchAccountParents',
+            url: '{{url('/searchAccountParents')}}',
             type: "GET",    
             dataType: 'json',
             delay : 250,
@@ -104,9 +105,13 @@
 
     }();
     $('#acc-search').on( 'select2:select', function (e) {
-        $("#load-all").attr("data-url", "/astar/dongtien/"+$('#acc-search').val());
+        $("#load-all").attr("data-url", "{{url('/dongtien')}}/"+$('#acc-search').val());
         PortletAjax.init();
         $('#load-all')[0].click();
+    });
+    jQuery(document).ready(function(){
+        $('#thuchi-0').addClass('open active');
+        $('#thuchi-1').addClass('open active');
     });
 </script>
 @endsection

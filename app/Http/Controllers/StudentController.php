@@ -15,9 +15,25 @@ use App\Students;
 use App\Classes;
 use App\Accounts;
 use Auth;
+use Response;
 class StudentController extends Controller
 {
     //
+
+    public function new_student($parent_id, $acc_id, $fName, $lName, $dob, $gender, $school, $class, $email, $phone){
+    	$student = new Students();
+    	$student->parent_id = $parent_id;
+    	$student->acc_id = $acc_id;
+    	$student->lastName = $lName;
+    	$student->firstname = $fName;
+    	$student->dob = date('Y-m-d', strtotime($dob));
+    	$student->gender = $gender;
+    	$student->school = $school;
+    	$student->email = $email;
+    	$student->phone = $phone;
+    	$student->save();
+    	return $student;
+    }
     function get_list(){
     	$students = Students::select('students.id as std_id','firstName','lastName','dob','gender','school','class','students.email as std_email'
     							,'students.phone as std_phone','parents.name','parents.phone as p_phone','parents.email as p_email','parents.work')
@@ -25,117 +41,7 @@ class StudentController extends Controller
 
     	return view ('student.list',compact('students'));	
     }
-    function detail_student($id){
-    	//Các lớp đang học
-    	$classLearning = Class_std::select('class_std.id as cls_std_id','class_id','student_id','firstDay','lastDay','note','discount','classes.name')
-    								->leftjoin('classes','classes.id','=','class_std.class_id')
-    								->where('student_id',$id)->get()->toArray();
-    	//Truong hop chua hoc lop nao
-
-    	if(empty($classLearning)) {
-
-    		return view('enroll/list');	    		
-    	}
-    	$thisMonth = 0;
-    	foreach ($classLearning as $key => $value) {
-    		//echo $value->class_id;
-    		//Tat ca diem danh cua hoc sinh 1 va lop value
-    		$atd = Attendances::where('class_std_id',$value['cls_std_id'])->join('lessons','lessons.id','=','attendances.lesson_id')
-								->join('teachers','teachers.id','=','lessons.teacher_id')
-							  	->select('attendances.id as atd_id','attendances.status','attendances.note','lessons.id as l_id','lessons.teacher_id','lessons.start_time','lessons.end_time','lessons.tuition','teachers.name')
-							  	->orderBy('start_time','DESC')->get()->toArray();
-
-    		$classLearning[$key]['atd']= $atd;
-
-    		//Tim tong hoc phi cua moi lop
-    		$thisMonth = date('m',strtotime($atd[0]['start_time']));
-	        $monthInPeriod = ($thisMonth %2 ==0)? $thisMonth +1 : $thisMonth-1;
-	        $thisYear = date('Y');
-	       	$period = min($
-                thisMonth, $monthInPeriod). " - " .max($thisMonth, $monthInPeriod);
-		
-			$tuitionBeforeDiscount = 0;	
-			$lesson_count=0;    		
-			//DISCOUNT									
-    		
-    		
-    		foreach ($atd as $k => $v) {
-    			# code...
-    			$month = date('m',strtotime($v['start_time']));
-    			if($month == $thisMonth || $month == $monthInPeriod){
-    				$lesson_count++;
-    				$tuitionBeforeDiscount+=$v['tuition'];
-    			}
-    		}
-    		$classLearning[$key]['lessonCount'] = $lesson_count;
-    		$classLearning[$key]['netTuition'] = $tuitionBeforeDiscount;
-    		$lastBalance = Transactions::where('student_id',$id)->where('class_id', $classLearning[$key]['class_id'])
-    									->whereYear('day',$thisYear)->whereMonth('day','<',min($thisMonth, $monthInPeriod))->where('rel_id', NULL)
-    									->sum('amount');
-    		$classLearning[$key]['lastBalance'] = $lastBalance;
-
-			$tuitionAfterDiscount = Transactions::where('student_id',$id)->where('class_id',$classLearning[$key]['class_id'])
-											    ->whereMonth('day','>=', min($thisMonth, $monthInPeriod))
-					                            ->whereMonth('day','<=',max($thisMonth, $monthInPeriod))
-					                            ->whereYear('day',$thisYear)
-												->whereIn('type',['-1','-2','2'])->sum('amount');
-			$classLearning[$key]['tuitionAfterDiscount'] = $tuitionAfterDiscount + $lastBalance;
-		    if($key == 0){
-                $classLearning[$key]['otherFee'] = Transactions::where('student_id',$id)
-                                                            ->whereMonth('day','>=', min($thisMonth, $monthInPeriod))
-                                                            ->whereMonth('day','<=',max($thisMonth, $monthInPeriod))
-                                                            ->whereYear('day',$thisYear)
-                                                            ->whereIn('type',['-2','2'])->sum('amount');
-            }
-            else $classLearning[$key]['otherFee'] = 0;
-		    $classLearning[$key]['recieved'] = Transactions::where('student_id',$id)
-														    ->whereMonth('day','>=', min($thisMonth, $monthInPeriod))
-								                            ->whereMonth('day','<=',max($thisMonth, $monthInPeriod))
-								                            ->whereYear('day',$thisYear)
-								                            ->where('type','1')->sum('amount');
-
-			$classLearning[$key]['balance'] = Transactions::where('student_id',$id)
-								    						->orderBy('id','DESC')->first()->balance;
-
-    	}
-
-    	// echo "<pre>";
-    	// print_r($classLearning);
-		//GIAO DỊCH TỔNG
-    	$stdTransaction = Transactions::where('student_id',$id)->get()->toArray();
-    	foreach ($stdTransaction as $key => $value) {
-    		# code...
-
-    		$studentInfo = Students::find($id)->toArray();
-    		$parentInfo = Parents::find($studentInfo['parent_id'])->toArray();
-    		$lessonInfo = Lessons::find($value['lesson_id']);
-    		$classInfo = Classes::find($value['class_id']);
-    		$stdTransaction[$key]['studentInfo'] = $studentInfo;
-    		$stdTransaction[$key]['parentInfo'] = $parentInfo;
-    		$stdTransaction[$key]['classInfo'] = $classInfo;
-    		$stdTransaction[$key]['lessonInfo'] = $lessonInfo;
-    		if(!is_null($stdTransaction[$key]['lessonInfo']['start_time'])){
-    			$stdTransaction[$key]['lessonInfo']['start_time'] = date('Y/m/d',strtotime($stdTransaction[$key]['lessonInfo']['start_time']));
-    		}
-    		$stdTransaction[$key]['lessonInfo']['start_time'] = date('Y/m/d',strtotime($stdTransaction[$key]['lessonInfo']['start_time']));
-    		$fomat = date('Y/m/d',strtotime($stdTransaction[$key]['created_at']));
-    		$stdTransaction[$key]['created_at'] = $fomat;
-    		if(!is_null($stdTransaction[$key]['day'])){
-    			$stdTransaction[$key]['day'] = date('Y/m/d',strtotime($stdTransaction[$key]['day']));
-    		}
-    		if(!is_null($stdTransaction[$key]['studentInfo']['dob'])){
-    			$stdTransaction[$key]['studentInfo']['dob'] = date('d/m/Y',strtotime($stdTransaction[$key]['studentInfo']['dob']));
-    		}
-    	}
-
-    	$student = Students::find($id);
-    	$parent  = Parents::find($student->parent_id);
-
-    	//Điểm danh tổng
-    	//Tìm các lớp hs đang học
-
-    	return view('transactions.listByStudent', compact('stdTransaction','id','student','parent','classLearning','period'));
-    }
+    
     
     function addAccount($studentId, $parentId){
         $student = Students::find($studentId);
@@ -168,5 +74,138 @@ class StudentController extends Controller
                 }   
         }
 
+    }
+    function csv_to_student(){
+        $std = Students::where('gender','Nam')->delete();
+        $parent = Parents::where('work',NULL)->delete();
+        $account = Accounts::where('type',1)->orWhere('type',2)->delete();
+        $std_cl = Class_std::where('student_id','!=',NULL)->delete();
+        $input = fopen("csv/students.csv", "r");
+                        $count = 0;
+        if($input !== FALSE){
+            while(($data = fgetcsv($input, 10000, "|")) !== FALSE){
+                // $dob = (empty($data[2])) ? NULL : date('Y-m-d',strtotime($data[2]));
+                // $checkS = Students::where('lastName',$data[0])->where('firstName',$data[1])->where('dob',$dob)->get()->toArray();
+                // if(empty($checkS)){
+                //     $count++;
+                //     echo "<pre>";
+                //     print_r($data);
+                // }
+
+
+                // //Create student's account 
+                $newStudentAcc = new Accounts();
+                $newStudentAcc->name = $data[0].' '.$data[1];
+                $newStudentAcc->dob = $data[2];
+                $newStudentAcc->type = 1;
+                $newStudentAcc->cat = 'asset';
+                $newStudentAcc->save();
+
+                $newStudent = new Students();
+                $newStudent->lastName = $data[0];
+                $newStudent->firstName = $data[1];
+                $newStudent->dob = (!empty($data[2]))? date('Y-m-d',strtotime($data[2])):null;
+                $newStudent->school = $data[4];
+                $newStudent->class = $data[5];
+                $newStudent->phone = $data[7];
+                $newStudent->email = $data[6];
+                $newStudent->acc_id = $newStudentAcc->id;
+                //Check if parent existed
+                $checkParent = Parents::where('phone','LIKE','%'.$data[9].'%')->get()->toArray();
+                $checkStudent = Students::where('lastName',$data[0])->where('firstName',$data[1])->where('school',$data[4])->get()->toArray();
+                if(empty($checkParent)){
+                    $newParent = new Parents();
+
+                    $newParentAcc = new Accounts();
+                    $newParentAcc->name = $data[8];
+                    $newParentAcc->dob = $data[9];
+                    $newParentAcc->type = 2;
+                    $newParentAcc->cat = 'asset';
+                    $newParentAcc->save();
+
+                    $newParent->name = $data[8];
+                    $newParent->phone = $data[9];
+                    $newParent->email = $data[10];
+                    $newParent->acc_id = $newParentAcc->id;
+                    $newParent->save();
+                    $newStudent->parent_id = $newParent->id;
+                    $newStudent->save();
+                }
+                else{
+                    if(!empty($checkStudent)){
+                        echo "<pre>";
+                        print_r($data);
+                        echo $checkStudent[0]['id'];
+                        continue;
+                    }
+                    else{
+                        $newStudent->parent_id = $checkParent[0]['id'];
+                        $newStudent->save();
+                    }
+                }
+
+                //Them vao lop
+                $classes = explode(',', $data[13]);
+                foreach ($classes as $key => $class) {
+                    # code...
+                    $findClass = Classes::where('name',$class)->get()->toArray();
+
+                    //da nghi hoc 
+                    if(empty($findClass)){
+                        $dClass = trim(str_replace('(N)', '', $class));
+                        $dropedClass = Classes::where('name',$dClass)->get()->toArray();
+                        if(!empty($dropedClass)){
+                            $class_std = new Class_std();
+                            $class_std->class_id = $dropedClass[0]['id'];
+                            $class_std->student_id = $newStudent->id;
+                            $class_std->firstDay = date('Y-m-d');
+                            $class_std->lastDay = date('Y-m-d');
+                            $class_std->note = $data[12];
+                            $class_std->save();
+                        }
+                        
+                        else echo $dClass."-".$data[9];
+                    }
+                    else{
+                        $class_std = new Class_std();
+                        $class_std->class_id = $findClass[0]['id'];
+                        $class_std->student_id = $newStudent->id;
+                        $class_std->firstDay = date('Y-m-d');
+                        $class_std->note = $data[12];
+                        //Nghi han
+                        if($data[13] == 'N'){
+                            $class_std->lastDay = date('Y-m-d');
+                        }
+                        $class_std->save();
+                    }
+                }
+            }
+            echo $count;
+        }    
+    }
+    function fetch_students(Request $request){
+    	$request = $request->toArray();
+    	$s = Students::where('lastName','LIKE','%'.$request['query'].'%')->orWhere('firstName','LIKE','%'.$request['query'].'%')->get();
+    	$result = [];
+    	foreach ($s as $key => $value) {
+    		# code...
+    		$name = $value->lastName." ".$value->firstName." - ".date('d-m-Y',strtotime($value->dob)) ;
+    		$bod = date('d-m-Y',strtotime($value->dob));
+    		$arr = ['name'=>$name, 'dob'=>$bod, 'id'=>$value->id,'school'=>$value->school];
+    		array_push($result, $arr);
+    	}
+    	return \Response::json($result);
+    }
+    function fetch_parents(Request $request){
+    	$request = $request->toArray();
+    	$s = Parents::where('phone','LIKE','%'.$request['query'].'%')->get();
+    	$result = [];
+    	foreach ($s as $key => $value) {
+    		# code...
+    		$name = $value->id." | ".$value->name." | ".$value->phone;
+    		
+    		array_push($result, $name);
+    	}
+    	return \Response::json($result);
     }
 }

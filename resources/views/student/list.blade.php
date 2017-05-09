@@ -96,4 +96,10 @@
 <script src="{{asset('assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
 <script src="{{ asset('assets/pages/scripts/table-datatables-buttons.js')}}" type="text/javascript"></script>     
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#hocsinh-0").addClass('open active');
+        $("#hocsinh-1").addClass('open active');
+    });
+</script>
 @endsection

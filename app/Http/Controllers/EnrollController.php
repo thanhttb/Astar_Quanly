@@ -53,6 +53,7 @@ class EnrollController extends Controller
     public function saveTeacher(Request $request){
     	$teacher = Enrolls::findorfail($request->pk);
     	$teacher->teacher = $request->value;
+        $teacher->receiveTime = date('Y-m-d'); 
     	$teacher->save();
     }
 
@@ -63,6 +64,14 @@ class EnrollController extends Controller
         }
         else $result->result = $request->value;
     	$result->save();
+    }
+    public function saveNote(Request $request){
+        $note = Enrolls::findorfail($request->pk);
+        if($note->value == null){
+            $note->note = $request->value;
+        }
+        else $note->note = $request->value;
+        $note->save();
     }
     public function editResultInform(Request $request){
     	$result = Enrolls::findorfail($request->pk);
@@ -155,36 +164,84 @@ class EnrollController extends Controller
                     # code...
                     $tag = "#".$className."#hp".$key;
                     $this->transfer($parent->acc_id, $student->acc_id , $value , $date, $tag);
-                }
-                
+                }              
     
             }
-            // foreach ($lessons as $key => $value) {
-                # code...
-                // $transaction = new Transactions();
-                // $transaction->student_id = $showUp->student_id;
-                // $transaction->parent_id = $showUp->parent_id;
-                // $transaction->class_id = $showUp->officalClass;
-                // $transaction->lesson_id = $value['id'];
-                // $transaction->day = date('Y-m-d', strtotime('+2 week'));
-                // $transaction->amount = -$value['tuition'];
-                // $transaction->balance = $balance - $value['tuition'];
-                // $balance -= $value['tuition'];
-                // $transaction->user = Auth::user()->name;
-                // $transaction->save();
-
-                // $attendance = new Attendances();
-                // $attendance->class_std_id = $xl->id;
-                // $attendance->lesson_id = $value['id'];
-                // $attendance->save();
-            // }
-        }
-        
-        //Thêm Transaction
-        
-
         $showUp->save();
+        }
+    }
+    //Lưu thông tin ghi danh mới
+    public function newEnroll($student_id, $parent_id, $subject, $class, $app, $note){
+        $enroll = new Enrolls();
+        $enroll->student_id = $student_id;
+        $enroll->parent_id = $parent_id;
+        $enroll->receiver = Auth::user()->name;
+        $enroll->subject = $subject;
+        $enroll->class = $class;
+        $enroll->appointment = empty($app)? NULL: date('Y-m-d h:i:m',strtotime($app));
+        $enroll->note = $note;
+        $enroll->save();
+        return $enroll;
+    }
+    function post_enroll(Request $request){
+        $this->validate($request, [
+            'firstName'=>'required',
+            'phone' => 'required',
 
+            ]);
+        echo "<pre>";
+        print_r($request->toArray());
 
+        //Check student exist in database
+        $id = explode(' | ', $request->firstName)[0];
+        if(is_numeric($id)){ //Student existed
+            $parent_id = Students::find($id)->parent_id;
+            foreach ($request->nguyenvong as $key => $value) {
+                # code...
+                $this->newEnroll($id, $parent_id, $value['subject'], $value['class'], $value['date'], $value['note']);
+            }
+            return redirect()->route('ktdv');
+        }
+        // CHECK IF PAREENT EXISTED IN DATABASE
+        // Create new Student + ACCOUNT + ENROLL
+        $parent_id = explode(' | ', $request->phone)[0];
+        if(is_numeric($parent_id) && count(explode(' | ', $request->phone))>1){
+            $newAccount = $this->newAccount($request->lastName. " ".$request->firstName,$request->dob, 1, 0);
+            $newStudent = $this->newStudent($parent_id, $newAccount->id, $request->firstName, $request->lastName, $request->dob, $request->gender, $request->school,NULL,NULL,NULL);
+            foreach ($request->nguyenvong as $key => $value) {
+                # code...
+                $this->newEnroll($newStudent->id, $parent_id, $value['subject'], $value['class'],$value['date'], $value['note']);
+            }
+            return redirect()->url('ktdv');
+        }
+        else{
+            $newParentAccount = $this->newAccount($request->name, $request->phone, 2, 0);
+            $newStudentAccount = $this->newAccount($request->lastName." ".$request->firstName, $request->dob, 1,0);
+            $newParent = $this->newParent($newParentAccount->id, $request->name, $request->phone, $request->email,NULL,NULL);
+            $newStudent = $this->newStudent($newParent->id, $newStudentAccount->id, $request->firstName, $request->lastName, $request->dob, $request->gender, $request->school, NULL, NULL,NULL);
+            foreach ($request->nguyenvong as $key => $value) {
+                # code...
+                $this->newEnroll($newStudent->id, $newParent->id, $value['subject'], $value['class'],$value['date'], $value['note']);
+            }
+            return redirect()->url('ktdv');
+        }
+
+    }
+
+    function getDashboard(){
+        $thieuhoso = Students::where('school',NULL)->orWhere('dob',NULL)->count();
+        $thieuhoso+= Parents::where('email',NULL)->count();
+        $chuahenlich = Enrolls::where('appointment',NULL)->count();
+        $chuathongbao = Enrolls::where('appointment','>',date('Y-m-d 00:00:00'))->where('appointment','<',date('Y-m-d 23:59:59'))->where('testInform',0)->count();
+        $henlailich = Enrolls::where('appointment','<',date('Y-m-d 00:00:00'))->where('showUp',0)->where('appointment','>',date('Y-m-d h:i:m',strtotime('-2 months')))->count();
+        $chuaguibai = Enrolls::where('teacher','0')->where('showUp',1)->count();
+        $chuacoketqua = Enrolls::where('teacher','!=','0')->where('result',NULL)->count();
+        $chuathongbaoketqua = Enrolls::where('result','!=',NULL)->where('resultInform',0)->count();
+        $chuathongbaongayhoc = Enrolls::where('firstDay','!=',NULL)->where('inform',0)->count();
+        $hochomnay = Enrolls::where('firstDay','>',date('Y-m-d 00:00:00'))->where('firstDay','<',date('Y-m-d 23:59:59'))->where('inform',0)->count();
+        $cannhacthem = Enrolls::where('decision','Cân nhắc thêm')->count();
+        $chomolop = Enrolls::where('decision','Chờ mở lớp')->count();
+        return view('enroll.dashboard', compact('thieuhoso','chuahenlich','henlailich','chuathongbao','chuaguibai','chuacoketqua','chuathongbaoketqua'
+            ,'chuathongbaongayhoc','hochomnay','cannhacthem','chomolop'));
     }
 }

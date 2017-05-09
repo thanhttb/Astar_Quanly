@@ -10,7 +10,7 @@
         
         $fd = Xcrud::get_instance();
         $fd->table('enrolls')->where('officalClass is not null');
-
+        $fd->table('Học buổi đầu');
         $fd->order_by('firstDay');
         $fd->hide_button('add');
         $fd->join('student_id','students','id');
@@ -19,12 +19,12 @@
         $fd->join('students.parent_id','parents','id');
 
         $fd->columns(array('student_id','parents.phone'
-        					,'subject','class','officalClass','firstDay','inform','firstday_showup'));
+        					,'subject','class','officalClass','firstDay','inform','firstday_showup','note'));
         $fd->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
                             'class'=> 'Lớp'));   
          $fd->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
                             'class'=> 'Lớp','receiver'=>'Người tiếp nhận','teacher' => 'Người chấm','result'=>'Kết quả',
-                            'resultInform'=>'Thông báo kết quả','decision'=>'Quyết định','officalClass'=>'Xếp lớp','firstDay'=>'Buổi đầu','inform' => 'Thông báo phụ huynh','firstday_showup'=>'Đã đến học'));   
+                            'resultInform'=>'Thông báo kết quả','decision'=>'Quyết định','officalClass'=>'Xếp lớp','firstDay'=>'Buổi đầu','inform' => 'Thông báo phụ huynh','note'=>'Ghi chú','firstday_showup'=>'Đã đến học'));   
         //Highligt Học sinh kiểm tra hôm nay
         $today = date("Y-m-d h:i");       
         $tomorrow = new DateTime('tomorrow');
@@ -35,7 +35,8 @@
         $fd->column_callback('officalClass','edit_class');
         $fd->column_callback('firstDay','add_firstDay');
         $fd->column_callback('inform','add_inform');
-        $fd->column_callback('firstday_showup','add_firstDay_showUp');    
+        $fd->column_callback('firstday_showup','add_firstDay_showUp');
+        $fd->column_callback('note','add_note');    
         echo $fd->render();
         //print_r($allClasses);
 	  ?>
@@ -121,7 +122,15 @@ function editInline(){
             if(!response.success) return Xcrud.reload();
         }             
 
-    });                        
+    });
+    $('.ghichu').editable({
+   		url: '{{route('saveNote')}}',
+   		row: 3,
+   		placement: 'left',
+   		success: function(response, newValue) {
+            if(!response.success) return Xcrud.reload();
+        }
+   });                        
 
 }
 $(document).ready(editInline());
@@ -129,6 +138,8 @@ window.onload = function(){
     jQuery(document).on("xcrudafterrequest",function(event,container){
         editInline();        
     });
+    $('#ghidanh-0').addClass('open active');
+    $('#ghidanh-0-4').addClass('open active');
 }
     
 

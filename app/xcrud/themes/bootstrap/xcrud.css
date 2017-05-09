@@ -1,6 +1,7 @@
 .xcrud{
     margin-bottom: 20px;
     background: white;
+    font-family: open-sans;
 }
 .xcrud-list{
     min-width: 100%;
