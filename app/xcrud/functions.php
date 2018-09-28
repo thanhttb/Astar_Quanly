@@ -26,6 +26,22 @@
 //   </div>
 // </div>';
 // }add_firstDay_showUp
+function deactive($xcrud){
+    if($xcrud->get('primary')){
+        $db = Xcrud_db::get_instance();
+        $query='UPDATE enrolls set firstday_showup = -1 WHERE id ='.(int)$xcrud->get('primary');
+        //echo $query;
+        $db->query($query);
+    }
+}
+function active($xcrud){
+    if($xcrud->get('primary')){
+        $db = Xcrud_db::get_instance();
+        $query='UPDATE enrolls set firstday_showup = 0 WHERE id ='.(int)$xcrud->get('primary');
+        //echo $query;
+        $db->query($query);
+    }
+}
 function class_detail($value, $fieldname, $primary_key, $row, $xcrud){
    return '<a href="classDetail/'. $row['classes.id']. '">' . $value. '</a>';
 
@@ -57,6 +73,10 @@ function add_edit_teacher($value, $fieldname, $primary_key, $row, $xcrud){
 }
 function add_edit_result($value, $fieldname, $primary_key, $row, $xcrud){
 	return '<a href="#" class ="result" data-type="textarea" data-pk='.$primary_key.' data-title="Kết quả + Nhận xét">'.$value.'</a>';
+
+}
+function add_note($value, $fieldname, $primary_key, $row, $xcrud){
+	return '<a href="#" class ="ghichu" data-type="textarea" data-pk='.$primary_key.' data-title="Ghi chú">'.$value.'</a>';
 
 }
 function add_edit_informed($value, $fieldname, $primary_key, $row, $xcrud){
@@ -291,7 +311,3 @@ function after_update_test($pd, $pm, $xc)
     $xc->search = 0;
 }
 
-function after_upload_test($field, &$filename, $file_path, $upload_config, $this)
-{
-    $filename = 'bla-bla-bla';
-}

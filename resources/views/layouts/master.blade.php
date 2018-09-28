@@ -4,7 +4,7 @@
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en">
+<html lang="en" ng-app = "astar">
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
 
@@ -16,8 +16,7 @@
         <meta content="Mananagement Website for A-Star Education Center" name="description" />
         <meta content="" name="author" />
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-        <link href="{{asset('assets/global/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">        <link href="{{asset('assets/global/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/global/plugins/simple-line-icons/simple-line-icons.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/global/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css')}}" rel="stylesheet" type="text/css" />
@@ -64,10 +63,18 @@
                             <i class="fa fa-angle-down"></i>
                         </button>
                         <ul class="dropdown-menu" role="menu">
+                            @if(Auth::user()->online == '0')
                             <li>
-                                <a href="javascript:;">
-                                    <i class="icon-docs"></i> Comming Soon </a>
+                                <a href="{{url('/checkin')}}">
+                                    <i class="fa fa-play"></i> Check-in </a>
                             </li>
+                            @else
+                            <li>
+                                <a href="{{url('/checkout')}}">
+                                    <i class="fa fa-stop"></i> Check-out </a>
+                            </li>
+                            @endif
+                                                       
                             <!-- <li>
                                 <a href="javascript:;">
                                     <i class="icon-tag"></i> New Comment </a>
@@ -97,9 +104,9 @@
                 <div class="page-top">
                     <!-- BEGIN HEADER SEARCH BOX -->
                     <!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
-                    <!-- <form class="search-form" action="page_general_search_2.html" method="GET">
+                    <!-- <form class="search-form" action="{{url('/searchAccountParents')}}" method="GET">
                         <div class="input-group">
-                            <input type="text" class="form-control input-sm" placeholder="Search..." name="query">
+                            <input type="text" class="form-control input-sm" placeholder="Search..." name="term">
                             <span class="input-group-btn">
                                 <a href="javascript:;" class="btn submit">
                                     <i class="icon-magnifier"></i>
@@ -124,7 +131,7 @@
                                 <ul class="dropdown-menu">
                                     <li class="external">
                                         <h3>
-                                            <span class="bold">Comming</span> SOON</h3>
+                                            <span class="bold">Coming</span> SOON</h3>
                                         <a href="#">view all</a>
                                     </li>
                                     <li>
@@ -225,7 +232,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="external">
-                                        <h3>Comming
+                                        <h3>Coming
                                             <span class="bold">SOON</span> </h3>
                                         <a href="#">view all</a>
                                     </li>
@@ -294,19 +301,28 @@
                             <li class="separator hide"> </li>
                             <!-- BEGIN TODO DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <li class="dropdown dropdown-extended dropdown-tasks dropdown-dark" id="header_task_bar">
+                            <li class="dropdown dropdown-extended dropdown-tasks dropdown-dark" id="header_task_bar" ng-controller="task-controller">
+
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <i class="icon-calendar"></i>
-                                    <span class="badge badge-primary"> 3 </span>
+                                    <span class="badge badge-primary" ng-bind="count"> </span>
                                 </a>
                                 <ul class="dropdown-menu extended tasks">
                                     <li class="external">
-                                        <h3>Comming
-                                            <span class="bold">SOON</span> </h3>
-                                        <a href="#">view all</a>
-                                    </li>
+                                        <h3>Bạn có
+                                            <span class="bold">@{{count}} việc</span> cần hoàn thành hôm nay</h3>
+<!--                                         <a href="#">view all</a>
+ -->                                </li>
                                     <li>
                                         <ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
+                                            <li ng-repeat = "task in tasks">
+                                                <a href="{{url('getReminder')}}/@{{task.enrolls_id}}">
+                                                    <span class="task">
+                                                        <span class="desc">@{{ task.content }} cho @{{ task.lastName +" "+ task.firstName}}</span>
+                                                    </span>
+
+                                                </a>
+                                            </li>
                                             <!-- <li>
                                                 <a href="javascript:;">
                                                     <span class="task">
@@ -460,9 +476,9 @@
                     <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
                     <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
                     <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-                    <ul class="page-sidebar-menu   " data-keep-expanded="true" data-auto-scroll="true" data-slide-speed="200">
+                    <ul class="page-sidebar-menu" data-keep-expanded="true" data-auto-scroll="true" data-slide-speed="200">
                         <li class="nav-item ">
-                            <a href="javascript:;" class="nav-link nav-toggle">
+                            <a href="{{url('/dashboard')}}" class="nav-link nav-toggle">
                                 <i class="icon-home"></i>
                                 <span class="title">Dashboard</span>
                                 
@@ -472,32 +488,32 @@
                         <li class="heading">
                             <h3 class="uppercase">Features</h3>
                         </li>
-                        <li class="nav-item start active open">
+                        <li class="nav-item start" id="ghidanh-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-diamond"></i>
-                                <span class="title">GHI DANH</span>
+                                <span class="title">TIẾP NHẬN HỌC SINH</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item active open ">
+                                <li class="nav-item" id="ghidanh-0-1">
                                     <a href="{{ url('/enroll') }}"> Ghi danh nhanh</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-2">
                                     <a href="{{ url ('/ktdv') }}">1. Kiểm tra đầu vào</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-3">
                                     <a href="{{url ('/result') }}">2. Kết quả kiểm tra</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-4">
                                     <a href="{{url ('/ngaydautiendihocmedatemdentruongemvuadivuakhoc')}}">3. Thông báo buổi học</a>
                                 </li>
                                 
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="ghidanh-0-5">
                                     <a href="{{url ('/listEnroll') }}">Danh sách tổng hợp </a>
                                 </li>
                                 
                             </ul>
-                        <li class="nav-item active open ">
+                        <li class="nav-item" id="lophoc-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="glyphicon glyphicon-blackboard"></i>
                                 <span class="title">QUẢN LÝ LỚP HỌC</span>
@@ -505,17 +521,23 @@
                             </a>
                             <ul class="sub-menu">
                                 
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="lophoc-1">
                                     <a href="{{ url('/listClass') }}">Danh sách lớp học</a>
                                 </li>  
-                                <li class="nav-item  ">
-                                    <a href="#">Danh sách học bù</a>
-                                </li>                             
+                                <li class="nav-item  " id="lophoc-2">
+                                    <a href="{{ url('/attendance') }}">Điểm danh</a>
+                                </li>
+                                <li class="nav-item  " id="lophoc-3">
+                                    <a href="{{ url('/hocbu')}}">Danh sách học bù</a>
+                                </li>
+                                <li class="nav-item  " id="lophoc-4">
+                                    <a href="{{ url('/editPeriod')}}">Quản lý chu kỳ</a>
+                                </li>                           
                                 
                             </ul>
                             
                         </li>
-                        <li class="nav-item active open ">
+                        <li class="nav-item" id="hocsinh-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="  glyphicon glyphicon-education"></i>
                                 <span class="title">QUẢN LÝ HỌC SINH</span>
@@ -523,50 +545,65 @@
                             </a>
                             <ul class="sub-menu">
                                 <li class="nav-item  ">
-                                    <a href="{{ url('/listStudent') }}">Danh sách học sinh</a>
-                                </li>                               
-                                
+                                    <a href="{{ url('/listStudent') }}" id="hocsinh-1">Danh sách học sinh</a>
+                                </li> 
+                                <li class="nav-item">                              
+                                    <a href="">Thêm học sinh</a>
+                                </li>
                             </ul>
                             
                         </li>
-                        <li class="nav-item  ">
+                        <li class="nav-item  " id="nhanvien-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="  glyphicon glyphicon-user"></i>
                                 <span class="title">QUẢN LÝ NHÂN VIÊN</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="nhanvien-1">
                                     <a href="{{ url('/listTeacher') }}">Danh sách giáo viên</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="nhanvien-2">
                                     <a href="{{ url('/listTutor') }}">Danh sách trợ giảng</a>
                                 </li>  
                                 <li class="nav-item  ">
-                                    <a href="{{ url('/listUser') }}">Danh sách nhân viên</a>
+                                    <a href="{{ url('/listUser') }}" id="nhanvien-3">Danh sách nhân viên</a>
                                 </li>                             
-                                
+                                @if(Auth::user()->permission >=2)
+                                <li class="nav-item  " id="nhanvien-4"> 
+                                    <a href="{{url('/listShift')}}">
+                                        Chấm công Nhân viên</a>
+                                </li>
+                                @endif 
                             </ul>
                             
                         </li>
 
-                        <li class="nav-item  ">
+                        <li class="nav-item  " id="thuchi-0">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class=" glyphicon glyphicon-usd"></i>
-                                <span class="title">Bkper</span>
+                                <span class="title">Thu-Chi</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                <li class="nav-item  ">
-                                    <a href="{{ url('/createInvoice') }}">Lập phiếu thu</a>
+                                <li class="nav-item  " id="thuchi-1">
+                                    <a href="{{ url('/selectAccount') }}">Học phí</a>
+                                </li>                                
+                                <li class="nav-item  " id="thuchi-3">
+                                    <a href="{{ url('/getReceipt') }}">Thêm phiếu thu </a>
+                                </li>   
+                                <li class="nav-item  " id="thuchi-4">
+                                    <a href="{{ url('/getpayment') }}">Thêm phiếu chi</a>
                                 </li>
-                                <li class="nav-item  ">
+                                <li class="nav-item  " id="thuchi-6">
+                                    <a href="{{ url('/groupbyDay') }}">Tổng kết thu chi theo ngày</a>
+                                </li>                    
+                                @if(Auth::user()->permission >= 2)
+                                <li class="nav-item  " id="thuchi-2">
                                     <a href="{{ url('/filterAcc') }}">Giao dịch</a>
                                 </li>
-                                <li class="nav-item  ">
-                                    <a href="{{ url('/listAll') }}">Ds Tổng</a>
-                                </li>  
-                                <li class="nav-item  ">
+                                @endif            
+                                <li class="nav-item  " id="thuchi-5">
                                     <a href="{{ url('/getDiscount') }}">Discount</a>
                                 </li>                             
                                 
@@ -891,51 +928,9 @@
         </div>
         <!-- END FOOTER -->
         <!-- BEGIN QUICK NAV -->
-<!--         <nav class="quick-nav" id="feedback-trigger">
-            
-            
-            
-            <span aria-hidden="true" class="quick-nav-bg"></span>
-        </nav>
-        <div class="modal fade" id="feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">FEEDBACK</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="frmTasks" name="frmTasks" class="form-horizontal" novalidate="">
-                        <div class="form-group error">
-                            <label for="inputClass" class="col-sm-3 control-label">Nội dung</label>
-                            <div class="col-sm-9">
-                                <input type="textarea" class="form-control has-error" id="note" name="note" placeholder="Góp ý" value="">
-                            </div>
-                        </div>
-                        
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btn-save" value="add">Gửi</button>
-                    <input type="hidden" id="class_id" name="class_id" value="0">
-                </div>
-            </div>
-        <div class="quick-nav-overlay"></div> -->
-        // <script type="text/javascript">
-        //     $(document).ready(function({
-        //          $('#feedback-trigger').click(function(){
-        //             $('#btn-save').val("add");
-        //             $('#frmTasks').trigger("reset");
-        //             $('#feedback').modal('show');
-        //         });
-        //     }));
-        // </script>
-        <!-- END QUICK NAV --> -->
-        <!--[if lt IE 9]>
-<script src="../assets/global/plugins/respond.min.js"></script>
-<script src="../assets/global/plugins/excanvas.min.js"></script> 
-<script src="../assets/global/plugins/ie8.fix.min.js"></script> 
-<![endif]-->
+        
         <!-- BEGIN CORE PLUGINS -->
-  
+        @yield('jquery')
         <script src="{{asset('assets/global/plugins/js.cookie.min.js')}}" type="text/javascript"></script>
         <script src="{{asset('assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js')}}" type="text/javascript"></script>
         <script src="{{asset('assets/global/plugins/jquery.blockui.min.js')}}" type="text/javascript"></script>
@@ -953,7 +948,15 @@
         <script src="{{asset('assets/layouts/layout4/scripts/demo.min.js')}}" type="text/javascript"></script>
         <script src="{{asset('assets/layouts/global/scripts/quick-sidebar.min.js')}}" type="text/javascript"></script>
         <script src="{{asset('assets/layouts/global/scripts/quick-nav.min.js')}}" type="text/javascript"></script>
-     
+        <script type="text/javascript" src="{{asset('angular/lib/angular.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/global/plugins/angular-chosen.js')}}"></script>
+
+<script type="text/javascript" src="{{asset('angular/app.js')}}"></script>
+        @yield('angular')
+
+
+        <script type="text/javascript">var url = "{{route('todayTask')}}" </script>
+        <script type="text/javascript" src="{{asset('angular/controllers/TaskController.js')}}"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
     </body>
 

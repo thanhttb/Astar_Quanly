@@ -1,0 +1,63 @@
+﻿Ngành,Nhãn hàng,Code CTKM,Loại,Dòng sản phẩm,Kích cỡ,Chương trình,Số lượng,Tương đương
+HAIR,ĐẶC BIỆT ,H01,Tất cả,Tất cả,dây,1.000.000đ dầu dây ck on top 2%,1000k,2.00%
+HAIR,Dove,H04,Xả,Dove xả,xả 335g (kẹp khăn),1/10 chai tặng 5/6.5%,1,5.00%
+HAIR,Dove,H04,Xả,Dove xả,xả 335g (kẹp khăn),1/10 chai tặng 5/6.5%,10,6.50%
+HAIR,Sunsilk,H05,Gội & Xả,Tất cả,chai/tuýp,1/10 chai ck 8.5/10%,1,8.50%
+HAIR,Sunsilk,H05,Gội & Xả,Tất cả,chai/tuýp,1/10 chai ck 8.5/10%,10,10.00%
+HAIR,Sunsilk,H06,Gội & Xả,Tất cả,dây,12/60 dây tặng 1/6,12,9.00%
+HAIR,Sunsilk,H06,Gội & Xả,Tất cả,dây,12/60 dây tặng 1/6,60,11.00%
+HAIR,Clear,H07,Gội,Trắng + Men,chai,1/10 chai ck 8.5/10%,1,8.50%
+HAIR,Clear,H07,Gội,Trắng + Men,chai,1/10 chai ck 8.5/10%,10,10.00%
+HAIR,Clear,H08,Gội,Trắng,dây,12/60 dây tặng 1/6,12,9.00%
+HAIR,Clear,H08,Gội,Trắng,dây,12/60 dây tặng 1/6,60,11.00%
+HAIR,Clear,H10,Gội,Men,650g + gift,1/10 chai ck 5/6.5%,1,5.00%
+HAIR,Clear,H10,Gội,Men,650g + gift,1/10 chai ck 5/6.5%,10,6.50%
+HAIR,Clear,H11,Gội,Thảo dược,tất cả,1/5 dây-chai ck 10/12%,1,10.00%
+HAIR,Clear,H11,Gội,Thảo dược,tất cả,1/5 dây-chai ck 10/12%,5,12.00%
+HAIR,Clear,H15,Gội,Thảo dược,650g + gift,1/5 chai ck 7/9%,1,7.00%
+HAIR,Clear,H15,Gội,Thảo dược,650g + gift,1/5 chai ck 7/9%,5,9.00%
+HAIR,Lifebouy,H16,Gội,Tất cả,sachet,12/60 dây ck 7.5/9%,12,7.50%
+HAIR,Lifebouy,H16,Gội,Tất cả,sachet,12/60 dây ck 7.5/9%,60,9.00%
+HAIR,Lifebouy,H17,Gội,Tất cả,chai,1/10 chai ck 8.5/10%,1,8.50%
+HAIR,Lifebouy,H17,Gội,Tất cả,chai,1/10 chai ck 8.5/10%,10,10.00%
+HAIR,Lifebouy,H18,Gội,Tất cả,640g tóc dày + 650g dưỡng tóc tặng balo,1/10 chai ck 5/6.5%,1,5.00%
+HAIR,Lifebouy,H18,Gội,Tất cả,640g tóc dày + 650g dưỡng tóc tặng balo,1/10 chai ck 5/6.5%,10,6.50%
+HAIR,Tresemme,H19,Gội,Tất cả,Tất cả,1/5 dây-chai ck 10/12%,1,10.00%
+HAIR,Tresemme,H19,Gội,Tất cả,Tất cả,1/5 dây-chai ck 10/12%,5,12.00%
+HAIR,Dove,H02,Gội & Xả,Tất cả,chai/tuýp,avc,1,8.50%
+HAIR,Dove,H02,Gội & Xả,Tất cả,chai/tuýp,avc,10,10.00%
+HAIR,Dove,H03,Gội & Xả,Tất cả,dây,12/60 dây tặng 1/6,12,9.00%
+HAIR,Dove,H03,Gội & Xả,Tất cả,dây,12/60 dây tặng 1/6,60,11.00%
+ORAL,Closeup,O01,KDR,Tất cả,Tất cả,1/36 tuýp ck 6-9%,1,6.00%
+ORAL,Closeup,O01,KDR,Tất cả,Tất cả,1/36 tuýp ck 6-9%,36,9.00%
+ORAL,P/S,O02,KDR,"Kids, GT, 123",Tất cả,1/36 cây ck 6/9%,1,6.00%
+ORAL,P/S,O02,KDR,"Kids, GT, 123",Tất cả,1/36 cây ck 6/9%,36,9.00%
+ORAL,P/S,O03,KDR,NSR,Tất cả,1/36 cây ck 5/8%,1,5.00%
+ORAL,P/S,O03,KDR,NSR,Tất cả,1/36 cây ck 5/8%,36,8.00%
+ORAL,P/S,O04,KDR,NSR,180g (tặng 30g P/S 123),6/36 cây ck 4.5/6%,6,4.50%
+ORAL,P/S,O04,KDR,NSR,180g (tặng 30g P/S 123),6/36 cây ck 4.5/6%,36,6.00%
+ORAL,P/S,O05,KDR,Expert,Tất cả,6 ống tặng 1 ống 100g,6,16.70%
+ORAL,P/S,O06,Bàn chải,Tất cả,Tất cả,110k/1400k tặng 1/17 ống P/S NSR 190g,110k,15.50%
+ORAL,P/S,O06,Bàn chải,Tất cả,Tất cả,110k/1400k tặng 1/17 ống P/S NSR 190g,1400k,20.60%
+ORAL,P/S,O07,Bàn chải,Lông tơ,Bộ (2+1),8/36 bộ tặng 1/6 bộ cùng loại,8,12.50%
+ORAL,P/S,O07,Bàn chải,Lông tơ,Bộ (2+1),8/36 bộ tặng 1/6 bộ cùng loại,36,16.70%
+SC,Dove,SC04,ST,Tất cả,chai vòi 530g kẹp khăn,1/3 chai ck 5/7%,1,5.00%
+SC,Dove,SC04,ST,Tất cả,chai vòi 530g kẹp khăn,1/3 chai ck 5/7%,3,7.00%
+SC,Lifebouy,SC05,ST,Tất cả,850g kẹp hộp bút,1/5 chai ck 5/7%,1,5.00%
+SC,Lifebouy,SC05,ST,Tất cả,850g kẹp hộp bút,1/5 chai ck 5/7%,5,7.00%
+SC,"ĐẶC BIỆT
+ (LFB + Lux + Dove)",SC02,XBC,Tất cả,XBC,16/72 XBC ck 6/8%,16,6.00%
+SC,"ĐẶC BIỆT
+ (LFB + Lux + Dove)",SC02,XBC,Tất cả,XBC,16/72 XBC ck 6/8%,72,8.00%
+SC,"ĐẶC BIỆT
+ (LFB + Lux + Dove)",SC03,ST & NRT,Tất cả,chai/túi (-Dove vòi 530g kẹp khăn),220k/1200k  tặng 1/8 NRT LFB 180g,220k,11.00%
+SC,"ĐẶC BIỆT
+ (LFB + Lux + Dove)",SC03,ST & NRT,Tất cả,chai/túi (-Dov                                                                                                                    e vòi 530g kẹp khăn),220k/1200k  tặng 1/8 NRT LFB 180g,1200k,16.00%
+SKIN,Hazeline,S02,Tất cả,Tất cả,Tất cả,200k/800k ck 12/14%,800k,14.00%
+SKIN,Ponds,S01,Tất cả,Tất cả (-cao cấp),Tất cả,200k/1000k ck 12/14%,200k,12.00%
+SKIN,Ponds,S01,Tất cả,Tất cả (-cao cấp),Tất cả,200k/1000k ck 12/14%,1000k,14.00%
+SKIN,Hazeline,S02,Tất cả,Tất cả,Tất cả,200k/800k ck 12/14%,200k,12.00%
+DEO,"ĐẶC BIỆT
+ (Axe + Rexona)",D01,Tất cả,Tất cả,Tất cả,1/1.000.000đ ck 18/22%,1,18.00%
+DEO,"ĐẶC BIỆT
+ (Axe + Rexona)",D01,Tất cả,Tất cả,Tất cả,1/1.000.000đ ck 18/22%,1000k,22.00%

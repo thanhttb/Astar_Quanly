@@ -10,7 +10,7 @@
     $today = date("Y-m-d h:i");
     
     $result = Xcrud::get_instance();
-    $result->table('enrolls')->where('showUp = 1');
+    $result->table('enrolls')->where('showUp = 1')->where('officalClass is NULL')->where('firstday_showup != -1');
     $result->table_name('Kết quả Kiểm tra đầu vào');
     $result->hide_button('add');
     $result->join('student_id','students','id');
@@ -18,12 +18,12 @@
     $result->join('students.parent_id','parents','id');
 
     $result->columns(array('student_id','parents.phone'
-    					,'subject','class','teacher','result','resultInform',
-    					'decision','officalClass','firstDay','receiver'));
+    					,'subject','class','teacher','receiveTime','result','resultInform',
+    					'decision','officalClass','firstDay','note','receiver'));
 
     $result->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
-                            'class'=> 'Lớp','receiver'=>'Người tiếp nhận','teacher' => 'Người chấm','result'=>'Kết quả',
-                            'resultInform'=>'Thông báo kết quả','decision'=>'Quyết định','officalClass'=>'Xếp lớp','firstDay'=>'Buổi đầu'));   
+                            'class'=> 'Lớp','receiver'=>'Người tiếp nhận','receiveTime'=>'Ngày gửi','teacher' => 'Người chấm','result'=>'Kết quả',
+                            'resultInform'=>'Thông báo kết quả','decision'=>'Quyết định','officalClass'=>'Xếp lớp','firstDay'=>'Buổi đầu','note'=>'Ghi chú'));   
     $result->highlight_row('result','!=',null,'#c7e881');
     $result->highlight_row('resultInform','=',1,'white');
     $result->highlight('result','=',null,'#c9d2d6');
@@ -37,17 +37,43 @@
     $result->column_callback('decision','add_edit_decision');
     $result->column_callback('officalClass','add_class');
     $result->column_callback('firstDay','add_firstDay');
+    $result->column_callback('note','add_note');
 
-    
+    $result->unset_edit();
+    $result->unset_remove();
+    $result->button('getReminder/{enrolls.id}','Nhắc việc');
+
+    $result->create_action('deactive','deactive');
+    $result->create_action('active','active');       
+    $result->button('#', 'Lưu trữ', 'icon-close glyphicon glyphicon-remove', 'xcrud-action',
+        array(  // set action vars to the button
+            'data-task' => 'action',
+            'data-action' => 'deactive',
+            'data-primary' => '{id}'),
+        array(  // set condition ( when button must be shown)
+            'firstday_showup',
+            '!=',
+            '-1')
+    );
+    $result->button('#', 'Hoạt động', 'icon-close glyphicon glyphicon-ok', 'xcrud-action',
+        array(  // set action vars to the button
+            'data-task' => 'action',
+            'data-action' => 'active',
+            'data-primary' => '{id}'),
+        array(  // set condition ( when button must be shown)
+            'firstday_showup',
+            '=',
+            '-1')
+    );
     echo $result->render();
     
 ?>
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 <!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -71,7 +97,7 @@
             };
 
             var teachers_src = [{id: '0', text: 'Chưa gửi bài' }];
-            var classes_src = [];
+            var classes_src = [{id: 0, text: 'Chưa xếp lớp' }];
             
             <?php 
             	foreach ($allTeachers as $key => $value) {
@@ -94,6 +120,14 @@
             });
            $('.result').editable({
            		url: '{{route('saveResult')}}',
+           		row: 3,
+           		placement: 'left',
+           		success: function(response, newValue) {
+		            if(!response.success) return Xcrud.reload();
+		        }
+           });
+           $('.ghichu').editable({
+           		url: '{{route('saveNote')}}',
            		row: 3,
            		placement: 'left',
            		success: function(response, newValue) {
@@ -156,6 +190,8 @@
 		    jQuery(document).on("xcrudafterrequest",function(event,container){
 		        result();        
 		    });
+            $('#ghidanh-0').addClass('open active');
+            $('#ghidanh-0-3').addClass('open active');
 		}
 </script>	
 @endsection()

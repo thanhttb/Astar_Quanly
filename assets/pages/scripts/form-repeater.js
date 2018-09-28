@@ -12,8 +12,6 @@ var FormRepeater = function () {
                             orientation: "left",
                             autoclose: true
                         });
-                        $(".basic-single").select2();
-                        $('.date').datetimepicker();
 		            },
 
 		            hide: function (deleteElement) {
@@ -23,8 +21,7 @@ var FormRepeater = function () {
 		            },
 
 		            ready: function (setIndexes) {
-                        $(".basic-single").select2();
-                        $('.date').datetimepicker();
+
 		            }
 
         		});

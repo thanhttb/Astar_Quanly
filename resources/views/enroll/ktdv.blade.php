@@ -2,15 +2,15 @@
 @section('content')
     <div id="_token" class="hidden" data-token="{{ csrf_token() }}"></div>
 
-	<?php
-		include(app_path().'/xcrud/xcrud.php');
-		include(app_path().'/xcrud/functions.php');
+    <?php
+        include(app_path().'/xcrud/xcrud.php');
+        include(app_path().'/xcrud/functions.php');
         echo Xcrud::load_css();
         echo Xcrud::load_js();
         $today = date("Y-m-d 00:00");
         
         $ktdv = Xcrud::get_instance();
-        $ktdv->table('enrolls')->where('showUp = 0');
+        $ktdv->table('enrolls')->where('showUp = 1')->where('firstday_showup != -1');
         $ktdv->table_name('Kiểm tra đầu vào');
         $ktdv->order_by('appointment');
         
@@ -19,11 +19,11 @@
         $ktdv->relation('student_id','students','id',array('lastName','firstName'));
         $ktdv->join('students.parent_id','parents','id');
 
-        $ktdv->columns(array('student_id','parents.phone'
-        					,'subject','class','appointment','testInform','showUp','created_at','receiver'));
+        $ktdv->columns(array('id','student_id','parents.phone'
+                            ,'subject','class','appointment','testInform','showUp','note','created_at','receiver'));
         $ktdv->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
                             'class'=> 'Lớp', 'appointment' => 'Ngày Kiểm tra', 'testInform' => 'Thông báo lịch KT', 'showUp'=>'Đến KT',
-                            'created_at'=>'Ngày tiếp nhận', 'receiver'=>'Người tiếp nhận'));   
+                            'note'=>'Ghi chú','created_at'=>'Ngày tiếp nhận', 'receiver'=>'Người tiếp nhận'));   
         
         //Highligt Học sinh kiểm tra hôm nay
         $tomorrow = new DateTime('tomorrow');
@@ -40,14 +40,40 @@
         $ktdv->unset_remove();
         $ktdv->column_callback('appointment','add_appointment');
         $ktdv->column_callback('testInform','add_testInform');
-        $ktdv->column_callback('showUp','add_showUp');    
-	  ?>
+        $ktdv->column_callback('showUp','add_showUp');  
+        $ktdv->column_callback('note','add_note');
+        $ktdv->button('getReminder/{enrolls.id}','Nhắc việc');
+
+        $ktdv->create_action('deactive','deactive');
+        $ktdv->create_action('active','active');       
+        $ktdv->button('#', 'Lưu trữ', 'icon-close glyphicon glyphicon-remove', 'xcrud-action',
+            array(  // set action vars to the button
+                'data-task' => 'action',
+                'data-action' => 'deactive',
+                'data-primary' => '{id}'),
+            array(  // set condition ( when button must be shown)
+                'firstday_showup',
+                '!=',
+                '-1')
+        );
+        $ktdv->button('#', 'Hoạt động', 'icon-close glyphicon glyphicon-ok', 'xcrud-action',
+            array(  // set action vars to the button
+                'data-task' => 'action',
+                'data-action' => 'active',
+                'data-primary' => '{id}'),
+            array(  // set condition ( when button must be shown)
+                'firstday_showup',
+                '=',
+                '-1')
+        );
+
+      ?>
     <div style="background: white;
  ">
         <?php echo $ktdv->render(); ?>
 
 
-    </div>>     
+    </div>
 
                 <!-- x-editable (bootstrap version) -->
 <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
@@ -103,16 +129,26 @@ function editInline(){
         }             
 
     });
+     $('.ghichu').editable({
+                url: '{{route('saveNote')}}',
+                row: 3,
+                placement: 'left',
+                success: function(response, newValue) {
+                    if(!response.success) return Xcrud.reload();
+                }
+           });
 }
 $(document).ready(editInline());
 window.onload = function(){
     jQuery(document).on("xcrudafterrequest",function(event,container){
         editInline();        
     });
+    $('#ghidanh-0').addClass('open active');
+    $('#ghidanh-0-2').addClass('open active');
 }
     
 
-</script>	
+</script>   
 
         
 @endsection()

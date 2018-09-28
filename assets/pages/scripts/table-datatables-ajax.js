@@ -14,14 +14,13 @@ var TableDatatablesAjax = function () {
 
         grid.init({
             src: $("#datatable_ajax"),
-            onSuccess: function (grid, v) {
+            onSuccess: function (grid, response) {
                 // grid:        grid object
-                 response:    'https://api.myjson.com/bins/1us28'
+                // response:    json object of server side ajax response
                 // execute some code after table records loaded
             },
             onError: function (grid) {
                 // execute some code on network or other general error  
-
             },
             onDataLoad: function(grid) {
                 // execute some code on ajax data load

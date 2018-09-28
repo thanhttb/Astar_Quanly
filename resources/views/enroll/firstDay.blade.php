@@ -2,15 +2,15 @@
 @section('content')
     <div id="_token" class="hidden" data-token="{{ csrf_token() }}"></div>
 
-	<?php
-		include(app_path().'/xcrud/xcrud.php');
-		include(app_path().'/xcrud/functions.php');
+    <?php
+        include(app_path().'/xcrud/xcrud.php');
+        include(app_path().'/xcrud/functions.php');
         echo Xcrud::load_css();
         echo Xcrud::load_js();
         
         $fd = Xcrud::get_instance();
-        $fd->table('enrolls')->where('officalClass is not null');
-
+        $fd->table('enrolls')->where('officalClass is not null')->where('firstday_showup = 0')->where('firstday_showup != -1');
+        $fd->table_name('Học buổi đầu');
         $fd->order_by('firstDay');
         $fd->hide_button('add');
         $fd->join('student_id','students','id');
@@ -19,12 +19,12 @@
         $fd->join('students.parent_id','parents','id');
 
         $fd->columns(array('student_id','parents.phone'
-        					,'subject','class','officalClass','firstDay','inform','firstday_showup'));
+                            ,'subject','class','officalClass','firstDay','inform','firstday_showup','note'));
         $fd->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
                             'class'=> 'Lớp'));   
          $fd->label(array('student_id' => 'Họ tên học sinh', 'parents.phone' => 'SDT Phụ Huynh', 'subject' => 'Môn ĐK',
                             'class'=> 'Lớp','receiver'=>'Người tiếp nhận','teacher' => 'Người chấm','result'=>'Kết quả',
-                            'resultInform'=>'Thông báo kết quả','decision'=>'Quyết định','officalClass'=>'Xếp lớp','firstDay'=>'Buổi đầu','inform' => 'Thông báo phụ huynh','firstday_showup'=>'Đã đến học'));   
+                            'resultInform'=>'Thông báo kết quả','decision'=>'Quyết định','officalClass'=>'Xếp lớp','firstDay'=>'Buổi đầu','inform' => 'Thông báo phụ huynh','note'=>'Ghi chú','firstday_showup'=>'Đã đến học'));   
         //Highligt Học sinh kiểm tra hôm nay
         $today = date("Y-m-d h:i");       
         $tomorrow = new DateTime('tomorrow');
@@ -35,10 +35,36 @@
         $fd->column_callback('officalClass','edit_class');
         $fd->column_callback('firstDay','add_firstDay');
         $fd->column_callback('inform','add_inform');
-        $fd->column_callback('firstday_showup','add_firstDay_showUp');    
+        $fd->column_callback('firstday_showup','add_firstDay_showUp');
+        $fd->column_callback('note','add_note');
+        $fd->button('getReminder/{enrolls.id}','Nhắc việc'); 
+        $fd->unset_edit();
+        $fd->unset_remove();
+        $fd->create_action('deactive','deactive');
+        $fd->create_action('active','active');       
+        $fd->button('#', 'Lưu trữ', 'icon-close glyphicon glyphicon-remove', 'xcrud-action',
+            array(  // set action vars to the button
+                'data-task' => 'action',
+                'data-action' => 'deactive',
+                'data-primary' => '{id}'),
+            array(  // set condition ( when button must be shown)
+                'firstday_showup',
+                '!=',
+                '-1')
+        );
+        $fd->button('#', 'Hoạt động', 'icon-close glyphicon glyphicon-ok', 'xcrud-action',
+            array(  // set action vars to the button
+                'data-task' => 'action',
+                'data-action' => 'active',
+                'data-primary' => '{id}'),
+            array(  // set condition ( when button must be shown)
+                'firstday_showup',
+                '=',
+                '-1')
+        );   
         echo $fd->render();
         //print_r($allClasses);
-	  ?>
+      ?>
                       
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script> 
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
@@ -121,7 +147,15 @@ function editInline(){
             if(!response.success) return Xcrud.reload();
         }             
 
-    });                        
+    });
+    $('.ghichu').editable({
+        url: '{{route('saveNote')}}',
+        row: 3,
+        placement: 'left',
+        success: function(response, newValue) {
+            if(!response.success) return Xcrud.reload();
+        }
+   });                        
 
 }
 $(document).ready(editInline());
@@ -129,10 +163,12 @@ window.onload = function(){
     jQuery(document).on("xcrudafterrequest",function(event,container){
         editInline();        
     });
+    $('#ghidanh-0').addClass('open active');
+    $('#ghidanh-0-4').addClass('open active');
 }
     
 
-</script>	
+</script>   
 
         
 @endsection()

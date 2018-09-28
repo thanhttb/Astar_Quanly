@@ -1,6 +1,6 @@
-@extends('layouts.master')
+@extends('layouts.ketoan')
 @section('content')
-<div class="row">
+<div>
     <?php
     include(app_path().'/xcrud/xcrud.php');
     include(app_path().'/xcrud/functions.php');
@@ -47,6 +47,10 @@ window.onload = function(){
 // jQuery(document).on("xcrudafterdepend", function(event, container, data) {
 //     jQuery(container).find('select[name="' + data.name + '"]').select2();
 // });
+$(document).ready(function() {
+      $("#transaction-0").addClass('open active');
+      $("#transaction-1").addClass('open active');
+    });
 </script>
     
 </div>

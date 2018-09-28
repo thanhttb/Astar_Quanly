@@ -20,7 +20,6 @@ class TransactionController extends Controller
     	$allTransaction = Transactions::all()->toArray();
     	$percentageAllTime = 0;
 
-
     	foreach ($allTransaction as $key => $value) {
     		# code...
     		$studentInfo = Students::findorfail($value['student_id'])->toArray();

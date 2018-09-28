@@ -83,10 +83,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
   $(".basic-single").select2();
+  
 });
 </script>
 
-
+        
         <link href="{{ asset('select2-4.0.3/dist/css/select2.min.css')}}" rel="stylesheet" type="text/css"></link> 
         <link href="{{ asset('select2-4.0.3/select2-bootstrap-css-master/docs/select2-bootstrap.css')}}" rel="stylesheet" type="text/css"></link> 
 

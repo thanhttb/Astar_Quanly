@@ -146,10 +146,18 @@
             </div>
         </div>
     </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        jQuery(document).ready(function(){
+        $('#thuchi-0').addClass('open active');
+        $('#thuchi-2').addClass('open active');
+    });
+    });
+</script>
 <link href="http://select2.github.io/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://select2.github.io/dist/js/select2.full.js"></script>
 <script type="text/javascript" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/global/scripts/datatable.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>	
-<script src="{{asset('assets/pages/scripts/ecommerce-orders.js')}}" type="text/javascript"></script>@endsection
+<script src="{{asset('assets/pages/scripts/filterAcc.js')}}" type="text/javascript"></script>@endsection

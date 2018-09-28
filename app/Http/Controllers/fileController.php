@@ -9,7 +9,7 @@ class fileController extends Controller
 {
     //
     function profile(){
-    	return view('Auth.profile');
+    	return view('auth.profile');
     }
     function store(){
     	

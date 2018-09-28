@@ -120,8 +120,6 @@ var ComponentsSelect2 = function() {
 
 }();
 
-if (App.isAngularJsApp() === false) {
-    jQuery(document).ready(function() {
+jQuery(document).ready(function() {
         ComponentsSelect2.init();
     });
-}
