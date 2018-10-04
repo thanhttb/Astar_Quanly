@@ -26,13 +26,13 @@ class ClassController extends Controller
     }
     function listClass(){
     	$classes = Classes::all()->toArray();
-    	foreach ($classes as $key => $value) {
-    		# code...
-    		$stdCount = Class_std::where('class_id',$value['id'])->count();
-    		$thisClass = Classes::find($value['id']);
-    		$thisClass->ss = $stdCount;
-    		$thisClass->save();
-    	}
+    	// foreach ($classes as $key => $value) {
+    	// 	# code...
+    	// 	$stdCount = Class_std::where('class_id',$value['id'])->count();
+    	// 	$thisClass = Classes::find($value['id']);
+    	// 	$thisClass->ss = $stdCount;
+    	// 	$thisClass->save();
+    	// }
     	return view('class.list');
     }
     function balance_in($time, $parentAcc, $studentAcc, $className){

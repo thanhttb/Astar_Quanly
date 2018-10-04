@@ -88,10 +88,9 @@ class Controller extends BaseController
     	$to->save();
     	return $transaction;
     }
-    protected function newStudent($parent_id, $acc_id, $fName, $lName, $dob, $gender, $school, $class, $email, $phone){
+    protected function newStudent($parent_id, $fName, $lName, $dob, $gender, $school, $class, $email, $phone){
     	$student = new Students();
     	$student->parent_id = $parent_id;
-    	$student->acc_id = $acc_id;
     	$student->lastName = $lName;
     	$student->firstname = $fName;
     	$student->dob = date('Y-m-d', strtotime($dob));
@@ -111,9 +110,8 @@ class Controller extends BaseController
         $newAcc->save();
         return $newAcc;        
     }
-    protected function newParent($acc_id,$name, $phone, $email, $work, $add){
+    protected function newParent($name, $phone, $email, $work, $add){
     	$newParent = new Parents();
-    	$newParent->acc_id = $acc_id;
     	$newParent->name = $name;
     	$newParent->phone = $phone; 
     	$newParent->email = $email;

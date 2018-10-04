@@ -42,7 +42,7 @@ return [
         'mysql' => [
             'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'iccltvn_astar_cs2',
+			'database'  => 'vietelite_hq',
 			'username'  => 'root',
 			'password'  => '',
 			'charset'   => 'utf8',

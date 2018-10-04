@@ -206,17 +206,17 @@ echo Xcrud::load_js();
         $('#ghidanh-0-1').addClass('open active');
         initTypeahead('#student-search',"{{url('/searchStudent')}}");
         initTypeahead('#parent-search',"{{url('/searchParent')}}");
+        
+        FormRepeater.init();
+        $('.sub').each(function(){
+            $(this).attr('ng-model', $(this).attr('name'));
+        })
         $('.timepicker-no-seconds').timepicker({
             autoclose: true,
             format:'dd/mm/yyyy HH:ii',
             minuteStep: 30,
             defaultTime: false
         });
-        FormRepeater.init();
-        $('.sub').each(function(){
-            $(this).attr('ng-model', $(this).attr('name'));
-        })
-
                 
     }) 
 </script>   
