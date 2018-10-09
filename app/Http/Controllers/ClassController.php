@@ -25,7 +25,7 @@ class ClassController extends Controller
     	return view('class.addNew');
     }
     function listClass(){
-    	$classes = Classes::all()->toArray();
+    	// $classes = Classes::all()->toArray();
     	// foreach ($classes as $key => $value) {
     	// 	# code...
     	// 	$stdCount = Class_std::where('class_id',$value['id'])->count();
@@ -42,63 +42,63 @@ class ClassController extends Controller
                                  ->where('description','LIKE','%'.$className.'%')->where('created_at','<=',$time)->sum('amount');
         return $fromParent - $toParent;
     }      
-    function classDetail($id){
-        $class = Classes::find($id)->toArray();
-        //Hoc sinh dang hoc
-    	$students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
-                                ->join('students','students.id','=','class_std.student_id')
-                                ->where('class_id', $id)->where('lastDay', null)
-                                ->join('parents','parents.id','=','students.parent_id')
-                                ->get()->toArray();
-        //Toàn bộ học sinh (đang học và đã nghỉ)
-        $studentsFull = Class_std::select('class_std.id as cs_id','firstDay','lastDay','note','firstName','lastName','dob','gender','class','school','students.email as std_email','students.phone as std_phone','name','parents.email as p_email','parents.phone as p_phone')
-                                    ->where('class_id',$id)
-                                    ->join('students','students.id','=','class_std.student_id')
-                                    ->join('parents','parents.id','=','students.parent_id')
-                                    ->orderBy('lastDay','ASC')
-                                    ->get()->toArray();
+    // function classDetail($id){
+    //     $class = Classes::find($id)->toArray();
+    //     //Hoc sinh dang hoc
+    // 	$students = Class_std::select('class_std.id as class_std_id','students.id as student_id','students.acc_id as student_acc','students.firstName','students.lastName','students.dob','parents.name','parents.phone','parents.acc_id as parent_acc')
+    //                             ->join('students','students.id','=','class_std.student_id')
+    //                             ->where('class_id', $id)->where('lastDay', null)
+    //                             ->join('parents','parents.id','=','students.parent_id')
+    //                             ->get()->toArray();
+    //     //Toàn bộ học sinh (đang học và đã nghỉ)
+    //     $studentsFull = Class_std::select('class_std.id as cs_id','firstDay','lastDay','note','firstName','lastName','dob','gender','class','school','students.email as std_email','students.phone as std_phone','name','parents.email as p_email','parents.phone as p_phone')
+    //                                 ->where('class_id',$id)
+    //                                 ->join('students','students.id','=','class_std.student_id')
+    //                                 ->join('parents','parents.id','=','students.parent_id')
+    //                                 ->orderBy('lastDay','ASC')
+    //                                 ->get()->toArray();
 
 
-        //Chu kỳ nào còn đang thiếu hp
-        $periods = Report_Debts::where('class_id',$id)->where('total','>',0)->get()->toArray();
+    //     //Chu kỳ nào còn đang thiếu hp
+    //     $periods = Report_Debts::where('class_id',$id)->where('total','>',0)->get()->toArray();
 
-        //                           
-        foreach ($students as $key => $value) {
+    //     //                           
+    //     foreach ($students as $key => $value) {
                 
-            $discount = Discounts::where('from',$value['student_acc'])->where('to',$class['acc_id'])->where('type','discount')->get()->toArray();
-            $students[$key]['discount'] = (empty($discount)) ? 0 : $discount[0]['discount'];
-            //
-            foreach ($periods as $k => $period) {
-                # code...
-                $periods[$k]['name'] = Periods::find($period['period_id'])->name;
-                $transactions = explode(',', $period['debts']);
-                $total_debt = 0;
-                $total_debbt+ 
-                foreach ($transactions as $transaction) {
-                    # code...
-                    if(empty($transaction)) continue;
-                    else{
-                        $check_transaction = Transaction::find($transaction);
+    //         $discount = Discounts::where('from',$value['student_acc'])->where('to',$class['acc_id'])->where('type','discount')->get()->toArray();
+    //         $students[$key]['discount'] = (empty($discount)) ? 0 : $discount[0]['discount'];
+    //         //
+    //         foreach ($periods as $k => $period) {
+    //             # code...
+    //             $periods[$k]['name'] = Periods::find($period['period_id'])->name;
+    //             $transactions = explode(',', $period['debts']);
+    //             $total_debt = 0;
+    //             $total_debbt+ 
+    //             foreach ($transactions as $transaction) {
+    //                 # code...
+    //                 if(empty($transaction)) continue;
+    //                 else{
+    //                     $check_transaction = Transaction::find($transaction);
 
-                        if($check_transaction->to == $value['student_acc']){
-                            $total_debt += $check_transaction->amount;
-                        }
-                    }
-                }
-                $students[$key]['p'.$period['id']] = $total_debt;
+    //                     if($check_transaction->to == $value['student_acc']){
+    //                         $total_debt += $check_transaction->amount;
+    //                     }
+    //                 }
+    //             }
+    //             $students[$key]['p'.$period['id']] = $total_debt;
                 
-            }
+    //         }
             
-        }
-        // echo "<pre>";
-        // print_r($students);
-        $teachers = Teachers::all()->toArray();
-        $para = json_encode($students);
+    //     }
+    //     // echo "<pre>";
+    //     // print_r($students);
+    //     $teachers = Teachers::all()->toArray();
+    //     $para = json_encode($students);
 
-        //Periods
-        $all_periods =  Periods::all();
-        return view('class.detail',compact('class','students','studentsFull','id','teachers','lessons','para','all_periods','periods'));
-    }
+    //     //Periods
+    //     $all_periods =  Periods::all();
+    //     return view('class.detail',compact('class','students','studentsFull','id','teachers','lessons','para','all_periods','periods'));
+    // }
     function tb_hoc_phi($id, Request $request){
         $this->validate($request, [
             'period'=>'required']);

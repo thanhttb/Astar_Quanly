@@ -43,7 +43,7 @@ function active($xcrud){
     }
 }
 function class_detail($value, $fieldname, $primary_key, $row, $xcrud){
-   return '<a href="classDetail/'. $row['classes.id']. '">' . $value. '</a>';
+   return '<a href="classDetail/'. $row['classes.name']. '">' . $value. '</a>';
 
 }
 function edit_class($value, $fieldname, $primary_key, $row, $xcrud){
