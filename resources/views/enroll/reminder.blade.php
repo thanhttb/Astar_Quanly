@@ -137,7 +137,7 @@
                             <div class="timeline-body-head-actions">
                                 <div class="btn-group">
 
-                                    <button type="button" class="btn purple mt-ladda-btn ladda-button btn-outline btn-circle" data-style="slide-left" data-spinner-color="#333" ng-show="history.status == 'Chưa hoàn thành'" ng-click = "done(history.id)">
+                                    <button type="button" class="btn purple mt-ladda-btn ladda-button btn-outline btn-circle" data-style="slide-left" data-spinner-color="#333" ng-show="history.status == 'Chưa hoàn thành'" ng-click = "done(	.id)">
                                         <span class="ladda-label">Đã hoàn thành</span>
                                     <span class="ladda-spinner"></span></button>                                    
                                 </div>

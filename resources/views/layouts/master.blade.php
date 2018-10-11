@@ -525,7 +525,7 @@
                                     <a href="{{ url('/listClass') }}">Danh sách lớp học</a>
                                 </li>  
                                 <li class="nav-item  " id="lophoc-2">
-                                    <a href="{{ url('/attendance') }}">Điểm danh</a>
+                                    <a href="{{ url('/sessions') }}">Quản lý ca học</a>
                                 </li>
                                 <li class="nav-item  " id="lophoc-3">
                                     <a href="{{ url('/hocbu')}}">Danh sách học bù</a>
@@ -627,7 +627,7 @@
                         <!-- BEGIN PAGE TOOLBAR -->
                         <div class="page-toolbar">
                             <!-- BEGIN THEME PANEL -->
-                            <div class="btn-group btn-theme-panel">
+                            <!-- <div class="btn-group btn-theme-panel">
                                 <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
                                     <i class="icon-settings"></i>
                                 </a>
@@ -701,7 +701,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- END THEME PANEL -->
                         </div>
                         <!-- END PAGE TOOLBAR -->

@@ -64,13 +64,15 @@ Route::post('change_password',['as'=>'change_password','uses'=> 'UserController@
 Route::get('addNewClass',['as'=>'addNewClass', 'uses'=>'ClassController@addNew']);
 Route::get('/listClass',['as'=>'listClass','uses'=>'ClassController@listClass']);
 Route::get('/classDetail/{id}',['as'=>'classDetail','uses'=>'ClassController@classDetail']);
-
-
-
+Route::get('/sessions',['as'=>'sessions','uses'=>'ClassController@list_sessions']);
+Route::get('/allClasses',['as'=>'allClasses', 'uses' => 'ClassController@all_classes']);
 
 Route::get('/listStudent',['as'=>'listStudent','uses'=>'StudentController@get_list']);
 Route::get('/detailStudent/{id}',['as'=>'detailStudent','uses'=>'StudentController@detail_student']);
 
+//CA HOC
+Route::get('/getSession/{class_id}',['as'=>'getSession', 'uses'=>'SessionController@get_session_by_class']);
+Route::post('/editSession/{id}',['as'=>'editSession','uses'=>'SessionController@edit_session']);
 //NHÂN VIÊN 
 Route::get('/listTeacher',['as'=>'listTeacher','uses'=>'TeacherController@get_teachers']);
 Route::get('/listTutor',['as'=>'listTutor','uses'=>'TeacherController@get_tutors']);

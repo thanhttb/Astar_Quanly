@@ -21,6 +21,12 @@ use Mail;
 class ClassController extends Controller
 {
     //
+    function all_classes(){
+        return Classes::all();
+    }
+    function list_sessions(){
+        return view('session.list');
+    }
     function addNew(){
     	return view('class.addNew');
     }
