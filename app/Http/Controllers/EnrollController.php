@@ -35,6 +35,10 @@ class EnrollController extends Controller
         return view('enroll/firstDay',compact('allClasses'));
     }
     public function saveDate(Request $request){
+<<<<<<< HEAD
+=======
+        
+>>>>>>> master
     	$datetime = Enrolls::findorfail($request->pk);
     	//echo $request->value;
     	$datetime->appointment = $request->value;
@@ -222,8 +226,13 @@ class EnrollController extends Controller
             $parent->email = $request->email;
             $parent->save();
 
+<<<<<<< HEAD
             $newAccount = $this->newAccount($request->lastName. " ".$request->firstName,$request->dob, 1, 0);
             $newStudent = $this->newStudent($parent_id, $newAccount->id, $request->firstName, $request->lastName, $request->dob, $request->gender, $request->school,NULL,NULL,NULL);
+=======
+            // $newAccount = $this->newAccount($request->lastName. " ".$request->firstName,$request->dob, 1, 0);
+            $newStudent = $this->newStudent($parent_id, $request->firstName, $request->lastName, $request->dob, $request->gender, $request->school,NULL,NULL,NULL);
+>>>>>>> master
             foreach ($request->nguyenvong as $key => $value) {
                 # code...
                 $this->newEnroll($newStudent->id, $parent_id, $value['subject'], $value['class'],$value['date'], $value['note']);
@@ -231,10 +240,17 @@ class EnrollController extends Controller
             return redirect()->url('ktdv');
         }
         else{
+<<<<<<< HEAD
             $newParentAccount = $this->newAccount($request->name, $request->phone, 2, 0);
             $newStudentAccount = $this->newAccount($request->lastName." ".$request->firstName, $request->dob, 1,0);
             $newParent = $this->newParent($newParentAccount->id, $request->name, $request->phone, $request->email,NULL,NULL);
             $newStudent = $this->newStudent($newParent->id, $newStudentAccount->id, $request->firstName, $request->lastName, $request->dob, $request->gender, $request->school, NULL, NULL,NULL);
+=======
+            // $newParentAccount = $this->newAccount($request->name, $request->phone, 2, 0);
+            // $newStudentAccount = $this->newAccount($request->lastName." ".$request->firstName, $request->dob, 1,0);
+            $newParent = $this->newParent($request->name, $request->phone, $request->email,NULL,NULL);
+            $newStudent = $this->newStudent($newParent->id, $request->firstName, $request->lastName, $request->dob, $request->gender, $request->school, NULL, NULL,NULL);
+>>>>>>> master
             foreach ($request->nguyenvong as $key => $value) {
                 # code...
                 $this->newEnroll($newStudent->id, $newParent->id, $value['subject'], $value['class'],$value['date'], $value['note']);

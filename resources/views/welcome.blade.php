@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>ASTAR EDUCATION CENTER</title>
+        <title>VIETELITE EDUCATION CENTER</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -79,12 +79,12 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    A-STAR EDUCATION CENTER
+                    VIETELITE EDUCATION CENTER
                 </div>
 
                 <div class="links">
-                    <a href="https://astar.edu.vn">Website</a>
-                    <a href="https://facebook.com/astar.edu.vn">Facebook</a>
+                    <a href="https://vietelite.edu.vn">Website</a>
+                    <a href="https://facebook.com/">Facebook</a>
         
                 </div>
             </div>

@@ -2,7 +2,7 @@
 class Xcrud_config
 {
     // default connection
-    public static $dbname = 'iccltvn_astar_cs2'; // Your database name
+    public static $dbname = 'vietelite_hq'; // Your database name
     public static $dbuser = 'root'; // Your database username
     public static $dbpass = ''; // // Your database password
     public static $dbhost = 'localhost'; // Your database host, 'localhost' is default.

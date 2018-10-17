@@ -9,7 +9,11 @@
         echo Xcrud::load_js();
         
         $fd = Xcrud::get_instance();
+<<<<<<< HEAD
         $fd->table('enrolls')->where('officalClass is not null')->where('firstday_showup = 0')->where('firstday_showup != -1');
+=======
+        $fd->table('enrolls')->where('officalClass is not null')->where('firstday_showup = 1')->where('firstday_showup != -1');
+>>>>>>> master
         $fd->table_name('Học buổi đầu');
         $fd->order_by('firstDay');
         $fd->hide_button('add');

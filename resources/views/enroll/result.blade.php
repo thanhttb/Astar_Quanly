@@ -10,7 +10,11 @@
     $today = date("Y-m-d h:i");
     
     $result = Xcrud::get_instance();
+<<<<<<< HEAD
     $result->table('enrolls')->where('showUp = 1')->where('officalClass is NULL')->where('firstday_showup != -1');
+=======
+    $result->table('enrolls')->where('showUp = 2')->where('officalClass is NULL')->where('firstday_showup != -1');
+>>>>>>> master
     $result->table_name('Kết quả Kiểm tra đầu vào');
     $result->hide_button('add');
     $result->join('student_id','students','id');

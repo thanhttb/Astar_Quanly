@@ -29,6 +29,7 @@ class AccountController extends Controller
             return \Response::json([]);
         }
         else{
+<<<<<<< HEAD
             $resultAccount = array();
             $resultAccount = Accounts::where('name','LIKE','%'.$request->term.'%')->where('type',1)->get()->toArray();
             $parent = Parents::where('phone','LIKE','%'.$request->term.'%')->get()->toArray();
@@ -38,6 +39,16 @@ class AccountController extends Controller
                 array_push($resultAccount, $parentAcc);
             }
 
+=======
+                $resultAccount = array();
+                $resultAccount = Accounts::where('name','LIKE','%'.$request->term.'%')->where('type',1)->get()->toArray();
+                $parent = Parents::where('phone','LIKE','%'.$request->term.'%')->get()->toArray();
+                foreach ($parent as $key => $value) {
+                    # code...
+                    $parentAcc = Accounts::find($value['acc_id'])->toArray();
+                    array_push($resultAccount, $parentAcc);
+            }
+>>>>>>> master
             return \Response::json($resultAccount);
         }
     }

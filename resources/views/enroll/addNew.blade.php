@@ -189,11 +189,19 @@ echo Xcrud::load_js();
                                 $(this).slideUp(deleteElement);
                             }
                         },
+<<<<<<< HEAD
 
                         ready: function (setIndexes) {
 
                         }
 
+=======
+
+                        ready: function (setIndexes) {
+
+                        }
+
+>>>>>>> master
                     });
                 });
             }
@@ -206,17 +214,28 @@ echo Xcrud::load_js();
         $('#ghidanh-0-1').addClass('open active');
         initTypeahead('#student-search',"{{url('/searchStudent')}}");
         initTypeahead('#parent-search',"{{url('/searchParent')}}");
+<<<<<<< HEAD
+=======
+        
+        FormRepeater.init();
+        $('.sub').each(function(){
+            $(this).attr('ng-model', $(this).attr('name'));
+        })
+>>>>>>> master
         $('.timepicker-no-seconds').timepicker({
             autoclose: true,
             format:'dd/mm/yyyy HH:ii',
             minuteStep: 30,
             defaultTime: false
         });
+<<<<<<< HEAD
         FormRepeater.init();
         $('.sub').each(function(){
             $(this).attr('ng-model', $(this).attr('name'));
         })
 
+=======
+>>>>>>> master
                 
     }) 
 </script>   

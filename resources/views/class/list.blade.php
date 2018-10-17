@@ -14,6 +14,7 @@
             echo Xcrud::load_css();
             echo Xcrud::load_js();
             $addnew = Xcrud::get_instance();
+<<<<<<< HEAD
             $addnew->table('accounts');
             $addnew->table_name('Thêm lớp');
             $addnew->join('accounts.id','classes','acc_id');
@@ -28,6 +29,19 @@
             $addnew->change_type('startTime','time');
             $addnew->pass_var('dob', date('Y-m-d'));
             $addnew->pass_var('type', 3);
+=======
+            $addnew->table('classes');
+            $addnew->table_name('Thêm lớp');
+            $addnew->label(array('id'=> 'ID','name'=>'Tên lớp','classes.teacher'=>'Giáo viên','classes.time'=>'Ngày học','classes.tuition'=>'Học phí','classes.numerator'=>'Sĩ số','classes.status'=>'Trạng thái','classes.base_id'=>'Cơ sở'));
+
+            $addnew->change_type('classes.tuition','price','',['decimals' => 0,'separator'=>'.', 'suffix' => 'đ', 'point' => ',']);
+            $addnew->column_class('classes.tuition','align-right'); 
+            // $addnew->change_type('classes.time','multiselect','default_value',['1'=>'Thứ 2','2'=>'Thứ 3','3'=>'Thứ 4','4'=>'Thứ 5','5'=>'Thứ 6','6'=>'Thứ 7','7'=>'Chủ nhật']);
+            $addnew->change_type('classes.status','select','default_value',['1'=>'Đang hoạt động','2'=>'Ngưng hoạt động']);
+            // $addnew->change_type('startTime','time');
+            // $addnew->pass_var('dob', date('Y-m-d'));
+            // $addnew->pass_var('type', 3);
+>>>>>>> master
             $addnew->column_callback('classes.name','class_detail');
             echo $addnew->render("list");       
             
